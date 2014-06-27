@@ -13,12 +13,11 @@ from pelicanconf import *
 SITEURL = 'http://econforge.github.io'
 # RELATIVE_URLS = False
 
+FEED_DOMAIN = SITEURL
 FEED_ALL_ATOM = 'feeds/all.atom.xml'
 CATEGORY_FEED_ATOM = 'feeds/%s.atom.xml'
 
 DELETE_OUTPUT_DIRECTORY = True
 
-# Following items are often useful when publishing
-
-#DISQUS_SITENAME = ""
-#GOOGLE_ANALYTICS = ""
+GOOGLE_ANALYTICS = 'UA-46021038-2'
+DISQUS_SITENAME = 'econforgeblog'

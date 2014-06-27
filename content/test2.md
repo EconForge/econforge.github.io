@@ -7,13 +7,10 @@ Summary: Shorter Version
 
 # Test post
 
-This is a post
-
-{% notebook examples.ipynb cells[2:] %}
+This is another post
 
     :::python
     import pandas as pd
 
+{% notebook HW3.ipynb %}
 
-
-{% notebook HW3.ipynb cells[:5] %}

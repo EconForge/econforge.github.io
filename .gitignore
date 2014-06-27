@@ -2,3 +2,4 @@ output/
 favicon.ico
 cache/
 *.pyc
+_nb_header.html

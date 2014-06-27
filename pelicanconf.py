@@ -11,7 +11,7 @@ AUTHOR = u'EconForge'
 SITENAME = u'EconForge'
 SITESUBTITLE = u'Where economists come for code'
 TAGLINE = u'Where economists come for code'
-SITEURL = 'http://econforge.github.io'
+SITEURL = ''
 
 PATH = 'content'
 
@@ -67,14 +67,7 @@ SOCIAL = (
     ('google', 'https://groups.google.com/forum/#!forum/econforge'),
 )
 
-DISPLAY_PAGES_ON_MENU = False
-
-# RSS/Atom feeds
-FEED_DOMAIN = SITEURL
-FEED_ATOM = 'atom.xml'
-
-GOOGLE_ANALYTICS = 'UA-46021038-2'
-DISQUS_SITENAME = 'econforgeblog'
+DISPLAY_PAGES_ON_MENU = True
 
 # Search
 SEARCH_BOX = True
