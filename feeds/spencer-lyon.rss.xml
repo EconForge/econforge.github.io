@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>EconForge</title><link>http://econforge.github.io/</link><description>Where economists come for code</description><atom:link href="/feeds/spencer-lyon.rss.xml" rel="self"></atom:link><lastBuildDate>Thu, 26 Jun 2014 23:31:00 -0400</lastBuildDate><item><title>Another great title</title><link>http://econforge.github.io/posts/2014/Jun/26/another-great-title/</link><description>&lt;h1&gt;Test post&lt;/h1&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>EconForge</title><link>http://econforge.github.io/</link><description>Where economists come for code</description><atom:link href="http://econforge.github.io/feeds/spencer-lyon.rss.xml" rel="self"></atom:link><lastBuildDate>Thu, 26 Jun 2014 23:31:00 -0400</lastBuildDate><item><title>Another great title</title><link>http://econforge.github.io/posts/2014/Jun/26/another-great-title/</link><description>&lt;h1&gt;Test post&lt;/h1&gt;
 &lt;p&gt;This is a post&lt;/p&gt;
 &lt;p&gt;
 &lt;div class="cell border-box-sizing code_cell rendered"&gt;
