@@ -10,6 +10,44 @@
 
         <title>My super title // EconForge // Where economists come for code</title>
 
+    <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<script type="text/javascript">
+init_mathjax = function() {
+    if (window.MathJax) {
+        // MathJax loaded
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+            },
+            displayAlign: 'left', // Change this to 'center' to center equations.
+            "HTML-CSS": {
+                styles: {'.MathJax_Display': {"margin": 0}}
+            }
+        });
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    }
+}
+init_mathjax();
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+    $("div.collapseheader").click(function () {
+    $header = $(this).children("span").first();
+    $codearea = $(this).children(".input_area");
+    console.log($(this).children());
+    $codearea.slideToggle(500, function () {
+        $header.text(function () {
+            return $codearea.is(":visible") ? "Collapse Code" : "Expand Code";
+        });
+    });
+});
+});
+</script>
+
+
 
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.3.0/pure-min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css">
@@ -36,7 +74,7 @@
                 <a href="http://econforge.github.io/author/spencer-lyon.html" title="See posts by Spencer Lyon">
                         <img class="avatar" alt="Spencer Lyon" src="http://www.gravatar.com/avatar/363fd9a9d8683f3f65f78e1ecde27f5c">
                 </a>
-                <a href="http://econforge.github.io/author/spencer-lyon.html"><h2 class="article-info">Spencer Lyon</h2></a>
+                <h2 class="article-info">Spencer Lyon</h2>
                 <small class="about-author">PhD Student NYU Stern Economics</small>
                 <h5>Published</h5>
                 <p>Jun 26, 2014</p>
@@ -58,12 +96,13 @@
             <h1>Test post</h1>
 <p>This is a post</p>
 <p>
-<div class="cell border-box-sizing code_cell vbox">
-<div class="input hbox">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 <div class="prompt input_prompt">
 In&nbsp;[2]:
 </div>
-<div class="input_area box-flex1">
+<div class="inner_cell">
+    <div class="input_area">
 <div class="highlight-ipynb"><pre class="ipynb"><span class="n">fred_names</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;GDPC1&quot;</span><span class="p">,</span> <span class="s">&quot;PCECC96&quot;</span><span class="p">,</span> <span class="s">&quot;GPDIC96&quot;</span><span class="p">,</span> <span class="s">&quot;OPHNFB&quot;</span><span class="p">]</span>
 <span class="n">func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">manhandle_freddata</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">gdpc1</span><span class="p">,</span> <span class="n">pcecc96</span><span class="p">,</span> <span class="n">gpdic96</span><span class="p">,</span> <span class="n">ophnfb</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">fred_names</span><span class="p">)</span>
@@ -71,15 +110,16 @@ In&nbsp;[2]:
 
 </div>
 </div>
+</div>
 
-<div class="vbox output_wrapper">
-<div class="output vbox">
-
-
-<div class="hbox output_area"><div class="prompt"></div>
-<div class="box-flex1 output_subarea output_display_data">
+<div class="output_wrapper">
+<div class="output">
 
 
+<div class="output_area"><div class="prompt"></div>
+
+
+<div class="output_png output_subarea ">
 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAtcAAAGACAYAAABm7U6PAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
 AAALEgAACxIB0t1+/AAAIABJREFUeJzs3Xd4VFX6wPHvTDKpk0ZCCAmQAAHpJfQOoUsT5YooKoht
 VXRFdF1ZfuiKBV1Ze1kLSFwFLwjLSodQRDrSewuhpZJJZtImM3N/fwQjLC3ATSYJ7+d5eGbm3jPn
@@ -855,15 +895,16 @@ Vkq9RrHX+BGtdQ74e2BraXubgAtDZH4PeKwUo09SHEJzuT7gT5RSbwA1wP/QWp8vtem7pddaXYrf
 q8B+in/H5ymefDp//Ma01scpnhD6N1eIjxBCCCGEuJxSylBKvWum2zGbKKWeVUqtn+l2XC2l1AKl
 1KGZbocQQkxGSvEJId4WSie3/XSm2yGum9SmFkIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGE
 EEIIIYQQQgghhBBCCCGEA/5/h7YwVUKJZUAAAAAASUVORK5CYII=
-">
+"
+>
+</div>
 
 </div>
-</div>
 
-<div class="hbox output_area"><div class="prompt"></div>
-<div class="box-flex1 output_subarea output_display_data">
+<div class="output_area"><div class="prompt"></div>
 
 
+<div class="output_png output_subarea ">
 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAtcAAAGACAYAAABm7U6PAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
 AAALEgAACxIB0t1+/AAAIABJREFUeJzs3XlcVPX6wPHPYWBAlmFTFBTBFfdcEHdF3LdM82iamWZl
 t/JWZvfXzdu1bqZZXdtu282bJm12Mq2bC4i4pqZpLqS5AyoCIsuww8yc3x8oVzMNdWAAn/fr5Qvm
@@ -1629,15 +1670,16 @@ kfl94EuVOvoofhea0/UCf2qM2Qk0Af/NWttTKdM3KsdaW6m/7cA2/H/Hx/FvPp07eWfW2r34N4T+
 zVnqR0REREROZ4xxjDFvnu5yXE2MMY8ZY26Z7nJcKGPMfGPMS9NdDhGRc9FQfCJyXajc3Pb96S6H
 XDaNTS0iIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIlXw/wP0yj40pto5MwAAAABJ
 RU5ErkJggg==
-">
+"
+>
+</div>
 
 </div>
-</div>
 
-<div class="hbox output_area"><div class="prompt"></div>
-<div class="box-flex1 output_subarea output_display_data">
+<div class="output_area"><div class="prompt"></div>
 
 
+<div class="output_png output_subarea ">
 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAtcAAAGACAYAAABm7U6PAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
 AAALEgAACxIB0t1+/AAAIABJREFUeJzs3Xl8U1X6x/FPmjbd0oUWCpR9UUHBhU1AQCgoKqKCXhVF
 xcEFRUZFXNFBRkRxQcVt5icKUkeFK4ILIoiAO6KoLKIgIKAUWijdtzTL74/USkUgwE3Tlu/79eqr
@@ -2543,15 +2585,16 @@ x7wK+APb65rHtf3KRsq6Dti5cZvDZpwfAT4paSVl1PhY268BVwIzanmHAANTZM4AFtc6OpkyhabV
 D4FzJT0O7Ax8zvYPakw31GNNqfX3KPAI5f/xXsrFp29vFmb7KcoFoZcPUj8RERER0UpSn6Sjux3H
 LxNJ90ia1u04NpWkXSSt6nYcERFDya34IuL/hXpx223djiNGLPemjoiIiIiIiIiIiIiIiIiIiIiI
 iIiIiIiIiIiIiIiIiIiIiIiIUfB/SE0edZFHxBQAAAAASUVORK5CYII=
-">
+"
+>
+</div>
 
 </div>
-</div>
 
-<div class="hbox output_area"><div class="prompt"></div>
-<div class="box-flex1 output_subarea output_display_data">
+<div class="output_area"><div class="prompt"></div>
 
 
+<div class="output_png output_subarea ">
 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAtEAAAGACAYAAABr8z7IAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
 AAALEgAACxIB0t1+/AAAIABJREFUeJzs3XlclXX6//HX4XAOi6weAUERVMR9XzLFDTV3y6Y7q7Gy
 bKpfTVPj15rKKeub2ViTWU01fducsUW7a7RmHDdCbc8tzSVBRFFBVjnAYTvb/fsDIs0N7D4cluv5
@@ -3399,34 +3442,37 @@ cYb6JfAkyQJtJvlukhFtBGOpqk6HZ6rqM23B7k2St7SX1e1zNa/1mIfAOm0ZjkHey+a4fwAbwJee
 vHvA2WjLU2C79+gBbfTlvE/AapIPwATwrKqOe027Pdds798IeEd7jvu0JdDJYbCqOqItZj6/oj+S
 JEn/ryS3ksyPu46/SZJXSe6Mu44/leR2ko/jrkOSfsUr7iT9U/qS2d6469C1ebezJEmSJEmSJEmS
 JEmSJEmSJEmSJEmSJEmSJEk30k/eRf3zqhPCkQAAAABJRU5ErkJggg==
-">
+"
+>
+</div>
+
+</div>
 
 </div>
 </div>
 
 </div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell vbox">
-<div class="input hbox">
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 <div class="prompt input_prompt">
 In&nbsp;[1]:
 </div>
-<div class="input_area box-flex1">
+<div class="inner_cell">
+    <div class="input_area">
 <div class="highlight-ipynb"><pre class="ipynb"><span class="kn">import</span> <span class="nn">numpy</span>
 <span class="k">print</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 
 </div>
 </div>
+</div>
 
-<div class="vbox output_wrapper">
-<div class="output vbox">
+<div class="output_wrapper">
+<div class="output">
 
 
-<div class="hbox output_area"><div class="prompt"></div>
-<div class="box-flex1 output_subarea output_stream output_stdout">
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
 <pre>
 [ 0.09876105  0.04966855  0.54857117  0.94883403  0.56618644  0.88200427
   0.89935228  0.96001678  0.32893132  0.80259359]
@@ -3439,19 +3485,27 @@ In&nbsp;[1]:
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Here is some math:</p>
-<p><span class="math">\(e^{i \pi} + 1 = 0\)</span></p>
+<p>$e^{i \pi} + 1 = 0$</p>
 </div>
-<div class="cell border-box-sizing code_cell vbox">
-<div class="input hbox">
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 <div class="prompt input_prompt">
 In&nbsp;[]:
 </div>
-<div class="input_area box-flex1">
+<div class="inner_cell">
+    <div class="input_area">
 <div class="highlight-ipynb"><pre class="ipynb">
 </pre></div>
 
+</div>
 </div>
 </div>
 

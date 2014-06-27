@@ -28,7 +28,7 @@ a:focus {
 pre {
     padding: 15px 15px 15px 15px;
     font-size: 90%;
-    box-shadow: 2px 2px 2px #888;
+    box-shadow: 2px 2px 2px rgba(136, 136, 136, 0.39)
 }
 
 .sidebar {

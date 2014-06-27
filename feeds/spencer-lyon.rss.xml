@@ -2,25 +2,27 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>EconForge</title><link>http://econforge.github.io/</link><description>Where economists come for code</description><atom:link href="/feeds/spencer-lyon.rss.xml" rel="self"></atom:link><lastBuildDate>Thu, 26 Jun 2014 23:31:00 -0400</lastBuildDate><item><title>Another great title</title><link>http://econforge.github.io/posts/2014/Jun/26/another-great-title/</link><description>&lt;h1&gt;Test post&lt;/h1&gt;
 &lt;p&gt;This is a post&lt;/p&gt;
 &lt;p&gt;
-&lt;div class="cell border-box-sizing code_cell vbox"&gt;
-&lt;div class="input hbox"&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
 &lt;div class="prompt input_prompt"&gt;
 In&amp;nbsp;[1]:
 &lt;/div&gt;
-&lt;div class="input_area box-flex1"&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
 &lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt;
 &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;numpy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 &lt;/div&gt;
 &lt;/div&gt;
+&lt;/div&gt;
 
-&lt;div class="vbox output_wrapper"&gt;
-&lt;div class="output vbox"&gt;
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
 
 
-&lt;div class="hbox output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
-&lt;div class="box-flex1 output_subarea output_stream output_stdout"&gt;
+&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_subarea output_stream output_stdout output_text"&gt;
 &lt;pre&gt;
 [ 0.09876105  0.04966855  0.54857117  0.94883403  0.56618644  0.88200427
   0.89935228  0.96001678  0.32893132  0.80259359]
@@ -33,19 +35,27 @@ In&amp;nbsp;[1]:
 &lt;/div&gt;
 
 &lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;Here is some math:&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(e^{i \pi} + 1 = 0\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;$e^{i \pi} + 1 = 0$&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing code_cell vbox"&gt;
-&lt;div class="input hbox"&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
 &lt;div class="prompt input_prompt"&gt;
 In&amp;nbsp;[]:
 &lt;/div&gt;
-&lt;div class="input_area box-flex1"&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
 &lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
+&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
@@ -55,70 +65,104 @@ In&amp;nbsp;[]:
 
 
 &lt;p&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;h1 id="homework-3"&gt;Homework 3&lt;/h1&gt;
 &lt;h2 id="spencer-lyon"&gt;Spencer Lyon&lt;/h2&gt;
 &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;h2 id="problem-1"&gt;Problem 1&lt;/h2&gt;
 &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;Before getting to the code, we need to derive some thoretical results.&lt;/p&gt;
-&lt;p&gt;We would like to choose &lt;span class="math"&gt;\(\bar{w}\)&lt;/span&gt; such that &lt;span class="math"&gt;\(y_t\)&lt;/span&gt; always has mean &lt;span class="math"&gt;\(1\)&lt;/span&gt;. Do to that we need the first two moments of &lt;span class="math"&gt;\(w_t\)&lt;/span&gt;.&lt;/p&gt;
-
-
-&lt;p&gt;This means that &lt;span class="math"&gt;\(w \sim N \left(\frac{\bar{w}}{1 - \rho}, \frac{\sigma_{\epsilon}^2}{1 - \rho^2} \right)\)&lt;/span&gt; and then &lt;span class="math"&gt;\(y \sim \log N \left(\frac{\bar{w}}{1 - \rho}, \frac{\sigma_{\epsilon}^2}{1 - \rho^2} \right)\)&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\[
+&lt;p&gt;We would like to choose $\bar{w}$ such that $y_t$ always has mean $1$. Do to that we need the first two moments of $w_t$.&lt;/p&gt;
+&lt;p&gt;\begin{align*}
+E[w_t] &amp;amp;= E \left[\bar{w} + \rho w_{t-1} + \epsilon_t \right] \\
+&amp;amp;= \bar{w} + \rho E[w] \\
+E[w] &amp;amp;= \frac{\bar{w}}{1 - \rho}
+\end{align*}&lt;/p&gt;
+&lt;p&gt;\begin{align*}
+var(w_t) &amp;amp;= var \left(\bar{w} + \rho w_{t-1} + \epsilon_t \right) \\
+&amp;amp;= \rho^2 var(w_{t-1}) + var(\epsilon_t) \\
+&amp;amp;= \rho^2 var(w_{t-1}) + \sigma_{\epsilon}^2 \\
+var(w) &amp;amp;= \frac{\sigma_{\epsilon}^2}{1 - \rho^2}
+\end{align*}&lt;/p&gt;
+&lt;p&gt;This means that $w \sim N \left(\frac{\bar{w}}{1 - \rho}, \frac{\sigma_{\epsilon}^2}{1 - \rho^2} \right)$ and then $y \sim \log N \left(\frac{\bar{w}}{1 - \rho}, \frac{\sigma_{\epsilon}^2}{1 - \rho^2} \right)$. &lt;/p&gt;
+&lt;p&gt;$$
 E_t[y_t] = \exp \left(\frac{\bar{w}}{1 - \rho} +  \frac{\sigma_{\epsilon}^2}{2(1 - \rho^2)}\right)
-\]&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;We want &lt;span class="math"&gt;\(E[y] = 1\)&lt;/span&gt;, which gives&lt;/p&gt;
-
+$$&lt;/p&gt;
+&lt;p&gt;We want $E[y] = 1$, which gives&lt;/p&gt;
+&lt;p&gt;\begin{align*}
+E_t[y_t] = 1 &amp;amp;= \exp \left(\frac{\bar{w}}{1 - \rho} +  \frac{\sigma_{\epsilon}^2}{2(1 - \rho^2)}\right) \\
+0 &amp;amp;= \frac{\bar{w}}{1 - \rho} +  \frac{\sigma_{\epsilon}^2}{2(1 - \rho^2)} \\
+\bar{w} &amp;amp;= \frac{- \sigma_{\epsilon}^2 (1 - \rho)}{2 (1 - \rho^2)} \\
+\bar{w} &amp;amp;= \frac{- \sigma_{\epsilon}^2 (1 - \rho)}{2 (1 - \rho)(1 + \rho)} \\
+\bar{w} &amp;amp;= \frac{- \sigma_{\epsilon}^2}{2 (1 + \rho)}
+\end{align*}&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing code_cell vbox"&gt;
-&lt;div class="input hbox"&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
 &lt;div class="prompt input_prompt"&gt;
 In&amp;nbsp;[0]:
 &lt;/div&gt;
-&lt;div class="input_area box-flex1"&gt;
-&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="n"&gt;using&lt;/span&gt; &lt;span class="n"&gt;PyPlot&lt;/span&gt;  &lt;span class="c"&gt;# Let&amp;#39;s plot some things&lt;/span&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="k"&gt;using&lt;/span&gt; &lt;span class="n"&gt;PyPlot&lt;/span&gt;  &lt;span class="c"&gt;# Let&amp;#39;s plot some things&lt;/span&gt;
 
-&lt;span class="nb"&gt;reload&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;discretize.jl&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="nb"&gt;reload&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;markov.jl&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;reload&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;discretize.jl&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;reload&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;markov.jl&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="c"&gt;# Useful functions&lt;/span&gt;
 &lt;span class="n"&gt;logn_E&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="err"&gt;μ&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;σ&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="err"&gt;μ&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="err"&gt;σ&lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;
 &lt;span class="n"&gt;logn_var&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="err"&gt;μ&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;σ&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;exp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="err"&gt;σ&lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;exp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="err"&gt;μ&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="err"&gt;σ&lt;/span&gt;&lt;span class="o"&gt;^&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-&lt;span class="n"&gt;function&lt;/span&gt; &lt;span class="n"&gt;sim_moments&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;Markov&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;50000&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;burn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-&lt;span class="sd"&gt;    Given an object of type Markov, simulate a markov process, compute&lt;/span&gt;
-&lt;span class="sd"&gt;    mean and variance of simulation, and compare to theoretical moments.&lt;/span&gt;
-&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;function&lt;/span&gt;&lt;span class="nf"&gt; sim_moments&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt;&lt;span class="n"&gt;Markov&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;50000&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;burn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="s"&gt;    Given an object of type Markov, simulate a markov process, compute&lt;/span&gt;
+&lt;span class="s"&gt;    mean and variance of simulation, and compare to theoretical moments.&lt;/span&gt;
+&lt;span class="s"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
     &lt;span class="c"&gt;# Simulate and compute moments (throw out burn in period)&lt;/span&gt;
     
     &lt;span class="n"&gt;sim&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;simulate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;mu&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sim&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;burn&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
-    &lt;span class="n"&gt;sig2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;var&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sim&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;burn&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+    &lt;span class="n"&gt;mu&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sim&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;burn&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="k"&gt;end&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+    &lt;span class="n"&gt;sig2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;var&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sim&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;burn&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="k"&gt;end&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
 
     &lt;span class="c"&gt;# print nice string representation of moments&lt;/span&gt;
-    &lt;span class="n"&gt;E_str&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;rpad&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nd"&gt;@sprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;E[y]   = &lt;/span&gt;&lt;span class="si"&gt;%.6f&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mu&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;17&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;E_str&lt;/span&gt; &lt;span class="o"&gt;*=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="nd"&gt;@sprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Expected = &lt;/span&gt;&lt;span class="si"&gt;%.6f&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;μ&lt;/span&gt;&lt;span class="n"&gt;_y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;E_str&lt;/span&gt; &lt;span class="o"&gt;*=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="nd"&gt;@sprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Abs. Difference = &lt;/span&gt;&lt;span class="si"&gt;%.6f&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;abs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mu&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="err"&gt;μ&lt;/span&gt;&lt;span class="n"&gt;_y&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-    &lt;span class="n"&gt;V_str&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\n\t&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;rpad&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nd"&gt;@sprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Var[y] = &lt;/span&gt;&lt;span class="si"&gt;%.6f&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sig2&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;17&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;V_str&lt;/span&gt; &lt;span class="o"&gt;*=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="nd"&gt;@sprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Expected = &lt;/span&gt;&lt;span class="si"&gt;%.6f&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;σ&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="n"&gt;_y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;V_str&lt;/span&gt; &lt;span class="o"&gt;*=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="nd"&gt;@sprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Abs. Difference = &lt;/span&gt;&lt;span class="si"&gt;%.6f&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;abs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sig2&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="err"&gt;σ&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="n"&gt;_y&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="n"&gt;E_str&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;rpad&lt;/span&gt;&lt;span class="p"&gt;(@&lt;/span&gt;&lt;span class="n"&gt;sprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;E[y]   = %.6f&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mu&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;17&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;E_str&lt;/span&gt; &lt;span class="o"&gt;*=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="n"&gt;sprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Expected = %.6f&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;μ&lt;/span&gt;&lt;span class="n"&gt;_y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;E_str&lt;/span&gt; &lt;span class="o"&gt;*=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="n"&gt;sprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Abs. Difference = %.6f&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;abs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mu&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="err"&gt;μ&lt;/span&gt;&lt;span class="n"&gt;_y&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="n"&gt;V_str&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\n\t&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;rpad&lt;/span&gt;&lt;span class="p"&gt;(@&lt;/span&gt;&lt;span class="n"&gt;sprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Var[y] = %.6f&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sig2&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;17&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;V_str&lt;/span&gt; &lt;span class="o"&gt;*=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="n"&gt;sprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Expected = %.6f&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="err"&gt;σ&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="n"&gt;_y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;V_str&lt;/span&gt; &lt;span class="o"&gt;*=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="n"&gt;sprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Abs. Difference = %.6f&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;abs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sig2&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="err"&gt;σ&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="n"&gt;_y&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 
     &lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;E_str&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;V_str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;mu&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sig2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sim&lt;/span&gt;
-&lt;span class="n"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
 
-&lt;span class="nb"&gt;type&lt;/span&gt; &lt;span class="n"&gt;Result&lt;/span&gt;
+&lt;span class="k"&gt;type&lt;/span&gt;&lt;span class="nc"&gt; Result&lt;/span&gt;
     &lt;span class="n"&gt;w&lt;/span&gt;
     &lt;span class="n"&gt;P&lt;/span&gt;
     &lt;span class="n"&gt;mu&lt;/span&gt;
     &lt;span class="n"&gt;sig2&lt;/span&gt;
-&lt;span class="n"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
 
 &lt;span class="c"&gt;# Define parameters&lt;/span&gt;
 &lt;span class="err"&gt;ρ&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.90&lt;/span&gt;
@@ -134,13 +178,14 @@ In&amp;nbsp;[0]:
 
 &lt;/div&gt;
 &lt;/div&gt;
+&lt;/div&gt;
 
-&lt;div class="vbox output_wrapper"&gt;
-&lt;div class="output vbox"&gt;
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
 
 
-&lt;div class="hbox output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
-&lt;div class="box-flex1 output_subarea output_stream output_stderr"&gt;
+&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_subarea output_stream output_stderr output_text"&gt;
 &lt;pre&gt;
 INFO: Loading help data...
 
@@ -152,18 +197,25 @@ INFO: Loading help data...
 &lt;/div&gt;
 
 &lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h3 id="a-b"&gt;a-b)&lt;/h3&gt;
+&lt;h3 id="a-b-"&gt;a-b)&lt;/h3&gt;
 &lt;p&gt;Below I will use the functions defined in &lt;code&gt;discretize.jl&lt;/code&gt; to approximate the Markov process using the Tauchen method with five and ten state Markov chains.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
 &lt;/div&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Spencer Lyon</dc:creator><pubDate>Thu, 26 Jun 2014 23:31:00 -0400</pubDate><guid>tag:econforge.github.io,2014-06-26:posts/2014/Jun/26/another-great-title/</guid><category>pelican</category><category>publishing</category><category>test</category></item><item><title>My super title</title><link>http://econforge.github.io/posts/2014/Jun/26/my-super-post/</link><description>&lt;h1&gt;Test post&lt;/h1&gt;
 &lt;p&gt;This is a post&lt;/p&gt;
 &lt;p&gt;
-&lt;div class="cell border-box-sizing code_cell vbox"&gt;
-&lt;div class="input hbox"&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
 &lt;div class="prompt input_prompt"&gt;
 In&amp;nbsp;[2]:
 &lt;/div&gt;
-&lt;div class="input_area box-flex1"&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
 &lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="n"&gt;fred_names&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;GDPC1&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;PCECC96&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;GPDIC96&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;OPHNFB&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;span class="n"&gt;func&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;manhandle_freddata&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;span class="n"&gt;gdpc1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pcecc96&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;gpdic96&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ophnfb&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;map&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fred_names&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -171,15 +223,16 @@ In&amp;nbsp;[2]:
 
 &lt;/div&gt;
 &lt;/div&gt;
+&lt;/div&gt;
 
-&lt;div class="vbox output_wrapper"&gt;
-&lt;div class="output vbox"&gt;
-
-
-&lt;div class="hbox output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
-&lt;div class="box-flex1 output_subarea output_display_data"&gt;
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
 
 
+&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
+&lt;div class="output_png output_subarea "&gt;
 &lt;img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAtcAAAGACAYAAABm7U6PAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
 AAALEgAACxIB0t1+/AAAIABJREFUeJzs3Xd4VFX6wPHvTDKpk0ZCCAmQAAHpJfQOoUsT5YooKoht
 VXRFdF1ZfuiKBV1Ze1kLSFwFLwjLSodQRDrSewuhpZJJZtImM3N/fwQjLC3ATSYJ7+d5eGbm3jPn
@@ -955,15 +1008,16 @@ Vkq9RrHX+BGtdQ74e2BraXubgAtDZH4PeKwUo09SHEJzuT7gT5RSbwA1wP/QWp8vtem7pddaXYrf
 q8B+in/H5ymefDp//Ma01scpnhD6N1eIjxBCCCGEuJxSylBKvWum2zGbKKWeVUqtn+l2XC2l1AKl
 1KGZbocQQkxGSvEJId4WSie3/XSm2yGum9SmFkIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGE
 EEIIIYQQQgghhBBCCCGEA/5/h7YwVUKJZUAAAAAASUVORK5CYII=
-"&gt;
+"
+&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
-&lt;/div&gt;
 
-&lt;div class="hbox output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
-&lt;div class="box-flex1 output_subarea output_display_data"&gt;
+&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
 
 
+&lt;div class="output_png output_subarea "&gt;
 &lt;img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAtcAAAGACAYAAABm7U6PAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
 AAALEgAACxIB0t1+/AAAIABJREFUeJzs3XlcVPX6wPHPYWBAlmFTFBTBFfdcEHdF3LdM82iamWZl
 t/JWZvfXzdu1bqZZXdtu282bJm12Mq2bC4i4pqZpLqS5AyoCIsuww8yc3x8oVzMNdWAAn/fr5Qvm
@@ -1729,15 +1783,16 @@ kfl94EuVOvoofhea0/UCf2qM2Qk0Af/NWttTKdM3KsdaW6m/7cA2/H/Hx/FvPp07eWfW2r34N4T+
 zVnqR0REREROZ4xxjDFvnu5yXE2MMY8ZY26Z7nJcKGPMfGPMS9NdDhGRc9FQfCJyXajc3Pb96S6H
 XDaNTS0iIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIlXw/wP0yj40pto5MwAAAABJ
 RU5ErkJggg==
-"&gt;
+"
+&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
-&lt;/div&gt;
 
-&lt;div class="hbox output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
-&lt;div class="box-flex1 output_subarea output_display_data"&gt;
+&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
 
 
+&lt;div class="output_png output_subarea "&gt;
 &lt;img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAtcAAAGACAYAAABm7U6PAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
 AAALEgAACxIB0t1+/AAAIABJREFUeJzs3Xl8U1X6x/FPmjbd0oUWCpR9UUHBhU1AQCgoKqKCXhVF
 xcEFRUZFXNFBRkRxQcVt5icKUkeFK4ILIoiAO6KoLKIgIKAUWijdtzTL74/USkUgwE3Tlu/79eqr
@@ -2643,15 +2698,16 @@ x7wK+APb65rHtf3KRsq6Dti5cZvDZpwfAT4paSVl1PhY268BVwIzanmHAANTZM4AFtc6OpkyhabV
 D4FzJT0O7Ax8zvYPakw31GNNqfX3KPAI5f/xXsrFp29vFmb7KcoFoZcPUj8RERER0UpSn6Sjux3H
 LxNJ90ia1u04NpWkXSSt6nYcERFDya34IuL/hXpx223djiNGLPemjoiIiIiIiIiIiIiIiIiIiIiI
 iIiIiIiIiIiIiIiIiIiIiIiIUfB/SE0edZFHxBQAAAAASUVORK5CYII=
-"&gt;
+"
+&gt;
+&lt;/div&gt;
 
 &lt;/div&gt;
-&lt;/div&gt;
 
-&lt;div class="hbox output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
-&lt;div class="box-flex1 output_subarea output_display_data"&gt;
+&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
 
 
+&lt;div class="output_png output_subarea "&gt;
 &lt;img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAtEAAAGACAYAAABr8z7IAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
 AAALEgAACxIB0t1+/AAAIABJREFUeJzs3XlclXX6//HX4XAOi6weAUERVMR9XzLFDTV3y6Y7q7Gy
 bKpfTVPj15rKKeub2ViTWU01fducsUW7a7RmHDdCbc8tzSVBRFFBVjnAYTvb/fsDIs0N7D4cluv5
@@ -3499,34 +3555,37 @@ cYb6JfAkyQJtJvlukhFtBGOpqk6HZ6rqM23B7k2St7SX1e1zNa/1mIfAOm0ZjkHey+a4fwAbwJee
 vHvA2WjLU2C79+gBbfTlvE/AapIPwATwrKqOe027Pdds798IeEd7jvu0JdDJYbCqOqItZj6/oj+S
 JEn/ryS3ksyPu46/SZJXSe6Mu44/leR2ko/jrkOSfsUr7iT9U/qS2d6469C1ebezJEmSJEmSJEmS
 JEmSJEmSJEmSJEmSJEmSJEk30k/eRf3zqhPCkQAAAABJRU5ErkJggg==
-"&gt;
+"
+&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
 
 &lt;/div&gt;
 &lt;/div&gt;
 
 &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;/div&gt;
-&lt;div class="cell border-box-sizing code_cell vbox"&gt;
-&lt;div class="input hbox"&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
 &lt;div class="prompt input_prompt"&gt;
 In&amp;nbsp;[1]:
 &lt;/div&gt;
-&lt;div class="input_area box-flex1"&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
 &lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt;
 &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;numpy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 &lt;/div&gt;
 &lt;/div&gt;
+&lt;/div&gt;
 
-&lt;div class="vbox output_wrapper"&gt;
-&lt;div class="output vbox"&gt;
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
 
 
-&lt;div class="hbox output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
-&lt;div class="box-flex1 output_subarea output_stream output_stdout"&gt;
+&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_subarea output_stream output_stdout output_text"&gt;
 &lt;pre&gt;
 [ 0.09876105  0.04966855  0.54857117  0.94883403  0.56618644  0.88200427
   0.89935228  0.96001678  0.32893132  0.80259359]
@@ -3539,19 +3598,27 @@ In&amp;nbsp;[1]:
 &lt;/div&gt;
 
 &lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;Here is some math:&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(e^{i \pi} + 1 = 0\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;$e^{i \pi} + 1 = 0$&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class="cell border-box-sizing code_cell vbox"&gt;
-&lt;div class="input hbox"&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
 &lt;div class="prompt input_prompt"&gt;
 In&amp;nbsp;[]:
 &lt;/div&gt;
-&lt;div class="input_area box-flex1"&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
 &lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
+&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
