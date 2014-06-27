@@ -4,6 +4,21 @@ This repository hosts the source for the EconForge blog.
 
 The site is generated using [http://docs.getpelican.com/en/3.3.0/](http://docs.getpelican.com/en/3.3.0/) and employs the [pure][http://purepelican.com/] theme.
 
+## Setting up repo
+
+We host this site on GitHub pages. This is a "user" page for the EconForge. GitHub requires that user pages are served from the master branch of the repository. To comply with this we do all of our work (writing content) on the `real_content` branch. Thus, when you first clone this repo you should execute the following commands:
+
+* `git clone git@github.com:EconForge/econforge.github.io.git`
+* `git checkout real_content`
+* `git submodule init`
+* `git submodule update`
+
+At this point you should be all ready to go. To check to see if everything is in order execute `make html`. 
+
+You can now update the content as you see fit.
+
+NOTE: You should not ever need to change to the master branch of this repo. So, unless you want to develop some content or try a new theme on a different branch, you can leave your local copy on the `real_content` branch forever.
+
 
 ## Adding Content
 
@@ -66,5 +81,8 @@ In this case, pelican would skip the first 2 cells of the notebook and render th
 The `liquid_tags` plugin comes with a few other useful snippets like that, so I encourage you to take a peek at its (brief) documentation
 
 
+## Uploading content
 
+To upload the content when you are done you simply need to make sure that you do `make html` and then execute `make github`. This will move the contents of the output directory to the root of the `master` branch and push to GitHub.
 
+The last step is to add the necessary things on the `real_content` branch and push it to origin.

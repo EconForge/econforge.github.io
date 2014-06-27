@@ -11,7 +11,7 @@ AUTHOR = u'EconForge'
 SITENAME = u'EconForge'
 SITESUBTITLE = u'Where economists come for code'
 TAGLINE = u'Where economists come for code'
-SITEURL = ''
+SITEURL = 'http://econforge.github.io'
 
 PATH = 'content'
 
