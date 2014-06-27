@@ -1,0 +1,4 @@
+output/
+favicon.ico
+cache/
+*.pyc
