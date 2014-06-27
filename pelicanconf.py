@@ -48,6 +48,7 @@ DEFAULT_PAGINATION = 10
 
 # This requires Pelican 3.3+
 STATIC_PATHS = ['images', 'figures', 'downloads', 'css', 'favicon.ico']
+EXTRA_HEADER = open('_nb_javascript.html').read().decode('utf-8')
 
 CODE_DIR = 'downloads/code'
 NOTEBOOK_DIR = 'downloads/notebooks'
