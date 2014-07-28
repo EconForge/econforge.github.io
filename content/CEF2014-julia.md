@@ -3,7 +3,6 @@ Date: 2014-07-28 12:00:00
 Category: Julia
 Tags: HP filter, yield-to-maturity, gauss-hermite, sovereign default
 Slug: cef2014-julia
-Status: draft
 Authors: Sébastien Villemot
 about_author: Economist at CEPREMAP
 email: sebastien@dynare.org
