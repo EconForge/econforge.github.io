@@ -1,0 +1,1736 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>EconForge</title><link>/</link><description>Where economists come for code</description><atom:link href="/feeds/pablo-winant.rss.xml" rel="self"></atom:link><lastBuildDate>Sat, 26 Jul 2014 12:00:00 -0400</lastBuildDate><item><title>Optimization: the N-armed bandit problem</title><link>/posts/2014/Jul/26/n-armed%20bandit/</link><description>&lt;p&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h1 id="the-n-armed-bandit-problems"&gt;The N-armed bandit problems&lt;/h1&gt;
+&lt;p&gt;Let&amp;#39;s look at a famous reinforcement learning problem called the N-armed bandit problem. A client in a casino, has access to several levers, each one yielding money with a different distribution of probabilities. Given that the client has no prior knowledge of these distributions, he must tries each lever several times before he can infer which one is best. Of course, this involves a tradeoff between trying a lever whose payoff is uncertain (a.k.a exploring) and repeatedly using the lever that yields the highest return in average.&lt;/p&gt;
+&lt;p&gt;This seemingly simple problem is a classic in the machine learning field and many nontrivial algorithm were devised to find an operational solution to it. Inspiration for the examples below example was drawn from &lt;em&gt;Reinforcement Learning:
+An Introduction&lt;/em&gt;, a book by Richard S. Sutton and Andrew G. Barto, which is also available as &lt;a href="http://webdocs.cs.ualberta.ca/~sutton/book/the-book.html"&gt;html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Here, I consider only two very simple strategies, namely Monte-Carlo simulations and an $\epsilon$-greedy strategy. Their performance is assessed by running a large number of simulations for each of them. The programming challenge will be to write a Python program whose computation time does not increase to fast so as to make this comparison feasible. Luckily, Python has many available options to optimize optimize. We will use this learning exercise to review two of them: vectorization and Just-In-Time copmilation.&lt;/p&gt;
+&lt;p&gt;[This notebook was initially conceived as an interactive exercise for the Workshop on High Performance Computing that took place before the CEF 2014 conference in &lt;a href="http://comp-econ.org/CEF_2014/Oslo"&gt;Oslo&lt;/a&gt;. Each bullet point was meant as a question to solve by participant. You can download the initial exercise without the answers from here : [give link].&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h2 id="try-it-yourself-"&gt;Try it yourself !&lt;/h2&gt;
+&lt;p&gt;If you run this notebook on your computer, and if you drop the &lt;code&gt;n_armed_bandit_game.py&lt;/code&gt;, in the same directory as the notebook, you can try to play the N-armed bandit game yourself.&lt;/p&gt;
+&lt;p&gt;Click each button in turn and try to maximize the total discounted value. The value reported next to each button $i$ is the average of the past payoffs for bandit $i$.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[1]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;n_armed_bandit_game&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;HumanPlayer&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;IPython.display&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;display&lt;/span&gt;
+&lt;span class="n"&gt;hp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;HumanPlayer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;hp&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;display&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h2 id="definition-of-the-problem"&gt;Definition of the problem&lt;/h2&gt;
+&lt;p&gt;Let&amp;#39;s define the problem more formally.&lt;/p&gt;
+&lt;p&gt;Take N random distributions $\left(d(n)\right)_{n\in[1,N]}$. Each distribution is called an arm of the machine.&lt;/p&gt;
+&lt;p&gt;The Player faces a machine with $N$ arms. Each arm $n\in[1,N]$ gives a stochastic payoff $d(n)$ which is i.i.d.&lt;/p&gt;
+&lt;p&gt;The distribution of the rewards is unknown but at each date $t\in [1,T]$ the player can take an action $n$ and get the stochastic payoff $d(n)$.&lt;/p&gt;
+&lt;p&gt;His goal is to choose a series of actions $(a_t)_{0\leq t \leq T}$  at each time to maximize intertemporal utility $\sum_{0 \leq t \leq T} \beta^t U(d_{a_t})$ with $0&amp;lt;\beta&amp;lt;1$ and $U(x)=\frac{x^{1-\gamma}}{1-\gamma}$ with $\gamma&amp;gt;1$.&lt;/p&gt;
+&lt;p&gt;The player doesn&amp;#39;t know the distributions of reward of each arm &lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h2 id="objective"&gt;Objective&lt;/h2&gt;
+&lt;p&gt;The goal of this tutorial is to implement to simple learning strategy. &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;a stupid Monte-Carlo strategy&lt;/li&gt;
+&lt;li&gt;an $\epsilon$ greedy strategy where the optimal action is selected with probability $1-\epsilon$ while a random action is taken with probability $\epsilon$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Each strategy will be given $K=1000$ different randomly drawn games to play, each of them being a $T=10000$ periods learning episode. Then we will average over the $K$ experiments to which is the best strategy. In particular, we want to find the value of $\epsilon$ that yields the optimal exploration/exploitation tradeoff for our distribution of problems.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h1 id="coding-the-problem"&gt;Coding the problem&lt;/h1&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;We will assume that the $d(n)$ are normally distributed with standard deviation $1$. The means $(m_n)$ of these distribution are a permutation of the equally distributed points $\left(\frac{n-1}{N-1}\right)_{n\in[1,N]}$.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[2]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[3]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="c"&gt;# we choose the parameters:&lt;/span&gt;
+
+&lt;span class="n"&gt;T&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt;
+&lt;span class="n"&gt;K&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;10000&lt;/span&gt;
+
+&lt;span class="n"&gt;N&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;        &lt;span class="c"&gt;# number of arms&lt;/span&gt;
+&lt;span class="n"&gt;beta&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.95&lt;/span&gt;   &lt;span class="c"&gt;# discount factor&lt;/span&gt;
+&lt;span class="n"&gt;gamma&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt;   &lt;span class="c"&gt;# risk aversion&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;ul&gt;
+&lt;li&gt;draw an instance of the problem as two one-dimensional arrays of size N, &lt;code&gt;means&lt;/code&gt; and &lt;code&gt;deviations&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[4]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="c"&gt;# response 1&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy.random&lt;/span&gt;
+&lt;span class="n"&gt;means&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;means&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt; &lt;span class="n"&gt;numpy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;permutation&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;deviations&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dtype&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;new_problem&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;means&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;means&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt; &lt;span class="n"&gt;numpy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;permutation&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;deviations&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dtype&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h1 id="finding-the-best-arm-with-monte-carlo-simulations-and-use-vectorized-computations-"&gt;Finding the Best Arm with Monte-Carlo simulations (and use vectorized computations)&lt;/h1&gt;
+&lt;p&gt;Here we consider a very simple strategy: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Given an integer $T_1$. During $N T_1$ periods, we use each lever in turn in order to estimate the lever that yields the higher utility.&lt;/li&gt;
+&lt;li&gt;Then, until last date $T$, we us the lever for which expected utility is higher.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[5]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="n"&gt;T1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;This algorithm can be expressed in a way that doesn&amp;#39;t require any conditional operation. The first and the second step can be expressed as a series of array operations. &lt;/p&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;create an array &lt;code&gt;&amp;#39;rewards&amp;#39;&lt;/code&gt; of size $N \times T_1$ such that each line $n$ contains $T_1$ realizations of the distribution $d(n)$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[6]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy.random&lt;/span&gt;
+&lt;span class="n"&gt;draws&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rand&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;T1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;draws&lt;/span&gt; &lt;span class="o"&gt;*=&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;   &lt;span class="c"&gt;# broadcasting avoids temporary arrays&lt;/span&gt;
+&lt;span class="n"&gt;draws&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;estimate the mean utility procured by each arm and select the best arm&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[7]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="n"&gt;mean_payoff&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;draws&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;axis&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;best_arm&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;mean_payoff&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argmax&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[8]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="n"&gt;mean_payoff&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;
+    Out[8]:&lt;/div&gt;
+
+
+&lt;div class="output_text output_subarea output_pyout"&gt;
+&lt;pre&gt;
+array([ 0.78126682,  1.32556455,  1.4223774 ,  0.49238937,  1.01025611])
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;compute the estimated mean of each distribution and the discounted value of playing each arm in turn during $N T_1$ periods.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[9]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="n"&gt;discount&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;arange&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;T1&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;discount&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;discount&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reshape&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;T1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;
+
+&lt;span class="n"&gt;value_T1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;draws&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;discount&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;axis&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="c"&gt;# OK: value_T1 = (draws*discount).ravel().sum()&lt;/span&gt;
+&lt;span class="c"&gt;# NO: value_T1 = (draws*discount).flatten().sum()  # flatten() creates a copy()&lt;/span&gt;
+&lt;span class="n"&gt;value_T1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;
+    Out[9]:&lt;/div&gt;
+
+
+&lt;div class="output_text output_subarea output_pyout"&gt;
+&lt;pre&gt;
+18.706324924857658
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;compute the value of the strategy&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[10]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="n"&gt;NN&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;T1&lt;/span&gt;
+&lt;span class="n"&gt;remaining_draws&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rand&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="n"&gt;NN&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;best_arm&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;best_arm&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+&lt;span class="n"&gt;remaining_value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;T1&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;dot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;NN&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;NN&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;&lt;span class="n"&gt;remaining_draws&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;remaining_value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;remaining_value&lt;/span&gt;
+
+&lt;span class="n"&gt;total_value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;value_T1&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;remaining_value&lt;/span&gt;
+
+&lt;span class="n"&gt;total_value&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;
+    Out[10]:&lt;/div&gt;
+
+
+&lt;div class="output_text output_subarea output_pyout"&gt;
+&lt;pre&gt;
+36.939042448439309
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;To profile the efficiency of these computations, the easiest way consists in encapsulate them in a function and profile this functions using IPython&amp;#39;s &lt;code&gt;prun&lt;/code&gt; magic.&lt;/p&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;encapsulate the algorithm as a function and profile it&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[11]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;semi_monte_carlo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;T1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    
+    &lt;span class="sd"&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class="sd"&gt;    Parameters&lt;/span&gt;
+&lt;span class="sd"&gt;    ----------&lt;/span&gt;
+&lt;span class="sd"&gt;    beta: time-discount&lt;/span&gt;
+&lt;span class="sd"&gt;    gamma: risk-aversion&lt;/span&gt;
+&lt;span class="sd"&gt;    T: length of simulations&lt;/span&gt;
+&lt;span class="sd"&gt;    T1: periods spent on Monte-Carlo evaluations&lt;/span&gt;
+&lt;span class="sd"&gt;    means: (1d-array) element i is mean of distribution i&lt;/span&gt;
+&lt;span class="sd"&gt;    deviations: (1d-array) element i is standard deviation of distribution i&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+    
+    &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy.random&lt;/span&gt;
+    
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;T1&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        
+        &lt;span class="c"&gt;# generate random draws&lt;/span&gt;
+        &lt;span class="n"&gt;draws&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;randn&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;T1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;draws&lt;/span&gt; &lt;span class="o"&gt;*=&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;   &lt;span class="c"&gt;# broadcasting avoids temporary arrays&lt;/span&gt;
+        &lt;span class="n"&gt;draws&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+        &lt;span class="n"&gt;mean_payoff&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;draws&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;axis&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;best_arm&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;mean_payoff&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argmax&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;    
+
+        &lt;span class="n"&gt;discount&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;arange&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;T1&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+        &lt;span class="n"&gt;value_T1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;draws&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ravel&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;discount&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="n"&gt;mean_T1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;draws&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;best_arm&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+        &lt;span class="n"&gt;value_T1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+        &lt;span class="n"&gt;mean_T1&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt;
+        
+    &lt;span class="n"&gt;optim&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;best_arm&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argmax&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+    
+    &lt;span class="n"&gt;NN&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;T1&lt;/span&gt;
+    &lt;span class="n"&gt;remaining_draws&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;randn&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="n"&gt;NN&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;best_arm&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;best_arm&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    
+    &lt;span class="n"&gt;mean_T1_T&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;remaining_draws&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;remaining_value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;dot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;NN&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;NN&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;&lt;span class="n"&gt;remaining_draws&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;T1&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;total_value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;value_T1&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;T1&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;remaining_value&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;total_value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;remaining_value&lt;/span&gt;
+        
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;mean_T1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mean_T1_T&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;total_value&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;optim&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="c"&gt;#    return total_value&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[12]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="n"&gt;semi_monte_carlo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; 
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;
+    Out[12]:&lt;/div&gt;
+
+
+&lt;div class="output_text output_subarea output_pyout"&gt;
+&lt;pre&gt;
+[0.56510584443015477, 1.0870655863145628, 14.169619748693677, True]
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[13]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="n"&gt;exps&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;semi_monte_carlo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;K&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[14]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="k"&gt;prun&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt; &lt;span class="n"&gt;all_values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="n"&gt;semi_monte_carlo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;K&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_subarea output_stream output_stdout output_text"&gt;
+&lt;pre&gt;
+ 
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;Note that we invode the &lt;code&gt;prun&lt;/code&gt; command with option &lt;code&gt;-s time&lt;/code&gt; so that functions taking more computation time, appear first. The first lines show something like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;   21004 function calls in 1.612 seconds
+
+   Ordered by: internal time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+     1000    1.249    0.001    1.582    0.002 &amp;lt;ipython-input-13-645b3a1ee348&amp;gt;:1(semi_monte_carlo)
+     1000    0.149    0.000    0.149    0.000 {method &amp;#39;rand&amp;#39; of &amp;#39;mtrand.RandomState&amp;#39; objects}
+     1000    0.094    0.000    0.102    0.000 function_base.py:8(linspace)
+        1    0.030    0.030    1.612    1.612 &amp;lt;string&amp;gt;:1(&amp;lt;module&amp;gt;)
+     1000    0.027    0.000    0.027    0.000 {numpy.core._dotblas.dot}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Appart from the generation of random numbers by the rand method, it looks like most of the time is spent in the vector operations in the &lt;code&gt;semi_monte_carlo&lt;/code&gt; method. Since these are presumed to be very efficient, there doesn&amp;#39;t seem to be much room for improvement.&lt;/p&gt;
+&lt;p&gt;NOTE: there actually &lt;em&gt;is&lt;/em&gt; room for improvements. From an algorithmic perspective, the procedure could be vectorized across all experiments. Also, vectorized operations using &lt;code&gt;numpy&lt;/code&gt; arrays are much better than interpreted loops but they don&amp;#39;t make efficiently use of CPU and memory resources. &lt;code&gt;numexpr&lt;/code&gt; and &lt;code&gt;theano&lt;/code&gt; are two libraries that seek to optimize this kind of vector operations. I leave it as an exercise for the reader, or for a later post.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;Find the optimal number of periods to spend on monte-carlo evaluations&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[15]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;average_payoff&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;T1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;K&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    
+    &lt;span class="n"&gt;vals&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;k&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;K&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new_problem&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;  &lt;span class="n"&gt;semi_monte_carlo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;T1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;vals&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vals&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;axis&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[16]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="n"&gt;T1_vec&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;AP_array&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="n"&gt;average_payoff&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;T1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;K&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;T1&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;T1_vec&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[17]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="k"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
+&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;figsize&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+&lt;span class="n"&gt;subplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;311&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;T1_vec&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;AP_array&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;initial phase&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;T1_vec&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;AP_array&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;final phase&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Mean payoff&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;subplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;312&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;T1_vec&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;AP_array&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;value&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;lower right&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Expected value&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;subplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;313&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;T1_vec&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;AP_array&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Number of explorative steps: $T1$&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Best option (%)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;
+    Out[17]:&lt;/div&gt;
+
+
+&lt;div class="output_text output_subarea output_pyout"&gt;
+&lt;pre&gt;
+&amp;lt;matplotlib.text.Text at 0x7f7a2989f450&amp;gt;
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
+&lt;div class="output_png output_subarea "&gt;
+&lt;img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmkAAAGDCAYAAABwRoerAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
+AAALEgAACxIB0t1+/AAAIABJREFUeJzs3Xd8FGXix/FPGimEhNBbIALSBBEVVGpsiB6KnIWqYjnb
+4Xnq3YngT8De9bw7lbOdimCXExUV9dZgQURAQRHp0gVCSYD0/f3x7GY3yW6yfXaT7/v1mtfOzM7s
+PBkS8s0zTwERERERERERERERERERERERERERERERERERERERERERERGxwPPALmBlLcc8AawFvgf6
+RaJQIiIiIg3dEEzw8hbSzgE+cKyfBCyORKFEREREBHLwHtKeBsa4bf8MtA53gURERESiRbzVBfCi
+PbDFbXsr0MGisoiIiIhEXLSGNIC4att2S0ohIiIiYoFEqwvgxTYg2227g2NfFV26dLGvX78+YoUS
+ERERCcJ6oKuvB0drTdq7wKWO9ZOB/ZjeoFWsX78eu92uJYBl+vTplpchlhfdP90/3b/YXHTvdP+s
+XIAu/oQhq2rS5gLDgBaYtmfTgSTHe7MwPTvPAdYBh4DLLSijiIiIiGWsCmnjfDhmcthLISIiIhKl
+ovVxp4RZbm6u1UWIabp/wdH9C47uX+B074Kj+xdZ1XtQxhq74xmviIiISFSLi4sDP7JXtPbuFBER
+aRCaNWvGvn37rC6GhFBWVhb5+flBf45q0kRERCwUFxeHfpfVL97+Tf2tSVObNBEREZEopJAmIiIi
+EoUU0kRERESikEKaiIiIeNW7d2/y8vJCcuw555zDyy+/7NNn5eTk8Omnn/p0bHXx8fFs2LAhoHOj
+iVW9O0cAjwMJwLPAA9XezwKeBzoDRcAVwI+RLKCIiIjAqlWrAjp2xowZrF+/vkoo++CDD3z+rLi4
+OGdD+wbLipq0BOCfmKDWCzP7QM9qx0wFlgF9MXN4/j2SBRQRERGxmhUhbQBmTs5NQCnwKjCq2jE9
+gf851tcAOUDLyBRPREREnHJycvjss88AUzt28cUXc9lll5GRkUHv3r357rvvqhz76aef8uGHH3Lf
+fffx2muv0aRJE/r16weYGQuee+45ANavX89pp51GixYtaNmyJRMnTuTAgQM+lWnSpElce+21DB8+
+nIyMDHJzc/n111+rHLNw4UK6detGVlYWkye7Zpqs67oPPPAAHTp0ICMjgx49elR+7Xa7nfvvv5+u
+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
+TbqVoq1+bhERERERERERERERERERERERERERERERERERERERERERERERERERERERERGRyvf/BDD+
+BVces34AAAAASUVORK5CYII=
+"
+&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;The first panel of the above graph show that explorative steps have a constant payoff over time, equal to 0.5. This is because it treats all levers symetrically. However, more explorative steps, increases in expectation the payoff of the final phase because it produces more information about which is the optimal lever to triger. The lower panel is consistent with this observation: it shows that the best button is selected more often when more explorative steps are taken.vec&lt;/p&gt;
+&lt;p&gt;Of course, the as soon as some information is known about the better levers, exploration becomes more costly because it implies underoptimal payoffs. For this reason, there is an optimal number of exploration steps to take, before the greedy approach becomes optimal. In the parametrization that we use, the optimal choice is $T1=2$, meaning that each trigger is triggered two times exactly, before the agent selects the higher yielding one.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h1 id="-0-greedy-strategies"&gt;$\epsilon$-greedy strategies&lt;/h1&gt;
+&lt;p&gt;We now consider a more elaborate strategy. Like in the former algorithm, we maintain a guess for the expected reward of each arm.
+But at each step we choose between &amp;quot;exploiting&amp;quot; the best option or &amp;quot;exploring&amp;quot; another one at random.&lt;/p&gt;
+&lt;p&gt;Here is the definition of the algorithm. At each step:&lt;/p&gt;
+&lt;p&gt;At each step: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;take an action&lt;ul&gt;
+&lt;li&gt;with probability $1-\epsilon$, choose the arm that is believed to have higher return (greedy option)&lt;/li&gt;
+&lt;li&gt;with probability $\epsilon$ take another arm at random    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Update the expection of the chosen option.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;implement the epsilon-greedy algorithm&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[18]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;pick&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;numpy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;randn&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;numba&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;jit&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;play&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;epsilon&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.1&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    
+    &lt;span class="sd"&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class="sd"&gt;    T:        number periods&lt;/span&gt;
+&lt;span class="sd"&gt;    means:    variances of the problem&lt;/span&gt;
+&lt;span class="sd"&gt;    estimate: &lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+    
+    &lt;span class="n"&gt;N&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;average_reward&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+    &lt;span class="n"&gt;value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+    &lt;span class="n"&gt;best&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+    
+    &lt;span class="n"&gt;discount&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+        
+    &lt;span class="n"&gt;estimate&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mf"&gt;0.5&lt;/span&gt;
+    
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        
+        &lt;span class="n"&gt;greedy&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rand&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;epsilon&lt;/span&gt;
+        
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;greedy&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;action&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;best&lt;/span&gt;
+            
+        &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;action&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;randint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            
+        &lt;span class="n"&gt;rew&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pick&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;action&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        
+        &lt;span class="n"&gt;estimate&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;action&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;  &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;estimate&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;action&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;rew&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            
+        &lt;span class="n"&gt;best&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argmax&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;estimate&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    
+        &lt;span class="n"&gt;value&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="n"&gt;rew&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;discount&lt;/span&gt;
+        
+        &lt;span class="n"&gt;discount&lt;/span&gt; &lt;span class="o"&gt;*=&lt;/span&gt; &lt;span class="n"&gt;beta&lt;/span&gt;
+        
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;compute the average return over $K$ experiments for $\epsilon=0.01$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[19]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="k"&gt;time&lt;/span&gt; &lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;  &lt;span class="n"&gt;play&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.01&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;K&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_subarea output_stream output_stdout output_text"&gt;
+&lt;pre&gt;
+CPU times: user 56.2 s, sys: 82.1 ms, total: 56.3 s
+Wall time: 56.4 s
+
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;
+    Out[19]:&lt;/div&gt;
+
+
+&lt;div class="output_text output_subarea output_pyout"&gt;
+&lt;pre&gt;
+14.656126325240169
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;Aouch, this naive approach took approximately one minute to complete... But we can certainly do better. As we did before, we will try to locate bottlenecks by profiling the code.&lt;/p&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;profile using prun&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[20]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="k"&gt;prun&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;  &lt;span class="n"&gt;play&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.01&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;K&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_subarea output_stream output_stdout output_text"&gt;
+&lt;pre&gt;
+ 
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;The output of the profiler is something like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;         50160319 function calls in 67.440 seconds
+
+   Ordered by: internal time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    10000   41.060    0.004   67.412    0.007 &amp;lt;ipython-input-131-7bcf9468a19b&amp;gt;:8(play)
+ 10000000   12.652    0.000   15.191    0.000 &amp;lt;ipython-input-131-7bcf9468a19b&amp;gt;:1(pick)
+ 10000000    5.408    0.000    5.408    0.000 {method &amp;#39;argmax&amp;#39; of &amp;#39;numpy.ndarray&amp;#39; objects}
+ 10000000    3.722    0.000    9.130    0.000 fromnumeric.py:878(argmax)
+ 10000000    2.539    0.000    2.539    0.000 {method &amp;#39;randn&amp;#39; of &amp;#39;mtrand.RandomState&amp;#39; objects}
+ 10000000    1.794    0.000    1.794    0.000 {method &amp;#39;rand&amp;#39; of &amp;#39;mtrand.RandomState&amp;#39; objects}
+    10001    0.114    0.000    0.114    0.000 {range}
+    10000    0.048    0.000    0.048    0.000 {numpy.core.multiarray.copyto}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Here is how we can decode these timings:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;41 seconds are spent in the play function (excluding calls to functions) in doing  basic operations. This is something that we can certainly reduce a lot by compiling the corresponding code with Numba.&lt;/li&gt;
+&lt;li&gt;13 seconds are spent in calling the pick function that also consists in one addition, one substration and some subscripting. Here is cost of defining a convenience function looks prohibitive, we will integrate it in the main loop&lt;/li&gt;
+&lt;li&gt;5 seconds are spent waiting for the function argmax to complete. We don&amp;#39;t need it anyway and will replace it by a manual comparison of two values.&lt;/li&gt;
+&lt;li&gt;4 seconds are spent in the random generator &lt;code&gt;rand&lt;/code&gt; and &lt;code&gt;randn&lt;/code&gt;. To minimize overhead, we will vectorize them.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The result of these optimization will be a preamble where we draw all random numbers in advance, followed by all conditional steps written with only simple python constructs. That will allow the use of the &lt;code&gt;njit&lt;/code&gt; compiler of numba that lowers all objects to low-level objects. (think: &amp;quot;like if they were translated to C&amp;quot;).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;optimize function play using numba&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[21]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;numba&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;jit&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;njit&lt;/span&gt;
+
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;exp&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;random&lt;/span&gt;
+
+&lt;span class="c"&gt;# the function play_numba starts by drawing all random numbers and then calls the iterative steps&lt;/span&gt;
+&lt;span class="c"&gt;# since the content of `play_numba` mostly vectorized, we would gain little by compiling it.&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;play_numba&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;epsilon&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    
+    &lt;span class="sd"&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class="sd"&gt;    T:        number periods&lt;/span&gt;
+&lt;span class="sd"&gt;    means:    variances of the problem&lt;/span&gt;
+&lt;span class="sd"&gt;    estimate: &lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+    
+    &lt;span class="n"&gt;N&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;average_reward&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt;
+    
+    &lt;span class="n"&gt;discount&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+        
+    &lt;span class="n"&gt;estimate&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ones&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mf"&gt;0.5&lt;/span&gt;
+
+    &lt;span class="n"&gt;random_draws&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;randn&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;random_ints&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;randint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c"&gt;# there are too many draws&lt;/span&gt;
+    &lt;span class="n"&gt;random_vals&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;numpy&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    
+    &lt;span class="n"&gt;value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;inside_loop&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;estimate&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;random_draws&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;random_ints&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;random_vals&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;epsilon&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;
+
+&lt;span class="nd"&gt;@njit&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;inside_loop&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;estimate&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;random_draws&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;random_ints&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;random_vals&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;epsilon&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+
+    &lt;span class="n"&gt;best&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+    &lt;span class="n"&gt;value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+    &lt;span class="n"&gt;discount&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        
+        &lt;span class="n"&gt;greedy&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;random_vals&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;epsilon&lt;/span&gt;
+        
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;greedy&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;action&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;best&lt;/span&gt;
+            
+        &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;action&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;random_ints&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;action&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;best&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                &lt;span class="n"&gt;action&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+            
+        &lt;span class="c"&gt;# the pick function is inlined here&lt;/span&gt;
+        &lt;span class="n"&gt;rew&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;random_draws&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;action&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;action&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+        &lt;span class="n"&gt;new_estimate&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;  &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;estimate&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;action&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;rew&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+        &lt;span class="c"&gt;# this replaces the call to argmax&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;new_estimate&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;estimate&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;best&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
+            &lt;span class="n"&gt;best&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;action&lt;/span&gt;
+            
+        &lt;span class="n"&gt;estimate&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;action&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new_estimate&lt;/span&gt;
+
+        &lt;span class="n"&gt;value&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="n"&gt;rew&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;discount&lt;/span&gt;
+        
+        &lt;span class="n"&gt;discount&lt;/span&gt; &lt;span class="o"&gt;*=&lt;/span&gt; &lt;span class="n"&gt;beta&lt;/span&gt;
+        
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[22]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="k"&gt;time&lt;/span&gt; &lt;span class="n"&gt;all_values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;  &lt;span class="n"&gt;play_numba&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.01&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;K&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+&lt;div class="output_subarea output_stream output_stdout output_text"&gt;
+&lt;pre&gt;
+CPU times: user 1.37 s, sys: 8.58 ms, total: 1.38 s
+Wall time: 1.37 s
+
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;This is much better ! We have divided the time by 40.&lt;/p&gt;
+&lt;p&gt;Now we can try to vary the exploration parameter $\epsilon$ to see if the $\epsilon$-greedy can perform better than the very simple Monte-Carlo strategy. &lt;/p&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;Find the epsilon that maximzes average value over K simulations&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[23]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;average_payoff_for_epsilon&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;epsilon&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;K&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;vals&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;k&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;K&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new_problem&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;  &lt;span class="n"&gt;play_numba&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;means&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;deviations&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;epsilon&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;vals&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;val&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vals&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[24]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="n"&gt;epsilon_vec&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;0.01&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;payoff_vec&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;average_payoff_for_epsilon&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;epsilon&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;K&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;epsilon&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;epsilon_vec&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;
+In&amp;nbsp;[25]:
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class="highlight-ipynb"&gt;&lt;pre class="ipynb"&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="k"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
+
+&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;epsilon_vec&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;payoff_vec&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;$\epsilon$-greedy&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;mm&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;AP_array&lt;/span&gt;&lt;span class="p"&gt;[:,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;max&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;hlines&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mm&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;xlim&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Monte-Carlo&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;lower right&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;
+    Out[25]:&lt;/div&gt;
+
+
+&lt;div class="output_text output_subarea output_pyout"&gt;
+&lt;pre&gt;
+&amp;lt;matplotlib.legend.Legend at 0x7f7a25979b90&amp;gt;
+&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
+&lt;div class="output_png output_subarea "&gt;
+&lt;img src="data:image/png;base64,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
+k3LnS1tKAAAAAElFTkSuQmCC
+"
+&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;
+&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;For this parametrization of the problem, the optimal $\epsilon$ is approximately $0.2$. This means that one selects what is believed to be the best lever with probability 80%, while a random choice is made with probability 20%.&lt;/p&gt;
+&lt;p&gt;Note that here, the Monte-Carlo approach performs better than the $\epsilon$ greedy approach. However, no generalization should be made out of it.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Pablo Winant</dc:creator><pubDate>Sat, 26 Jul 2014 12:00:00 -0400</pubDate><guid>tag:,2014-07-26:posts/2014/Jul/26/n-armed bandit/</guid><category>reinforcement learning</category><category>numba</category><category>vectorization</category></item></channel></rss>
