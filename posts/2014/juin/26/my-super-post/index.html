@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="EconForge, Where economists come for code">
 
+        <link rel="alternate"  href="http://econforge.github.io/feeds/all.atom.xml" type="application/atom+xml" title="EconForge Full Atom Feed"/>
 
         <title>My super title // EconForge // Where economists come for code</title>
 
@@ -49,11 +50,11 @@ jQuery(document).ready(function($) {
 
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.3.0/pure-min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/theme/css/pure.css">
-    <link rel="stylesheet" href="/theme/css/pygments.css">
-    <link rel="stylesheet" href="/css/ipython1.css">
-    <link rel="stylesheet" href="/css/ipython2.css">
-    <link rel="stylesheet" href="/css/ipython3.css">
+    <link rel="stylesheet" href="http://econforge.github.io/theme/css/pure.css">
+    <link rel="stylesheet" href="http://econforge.github.io/theme/css/pygments.css">
+    <link rel="stylesheet" href="http://econforge.github.io/css/ipython1.css">
+    <link rel="stylesheet" href="http://econforge.github.io/css/ipython2.css">
+    <link rel="stylesheet" href="http://econforge.github.io/css/ipython3.css">
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/fitvids/1.0.1/jquery.fitvids.min.js"></script>
@@ -69,10 +70,10 @@ jQuery(document).ready(function($) {
     <div class="sidebar sidebar-article pure-u">
         <header class="header-article">
             <hgroup>
-                <a href="/author/spencer-lyon.html" title="See posts by Spencer Lyon">
+                <a href="http://econforge.github.io/author/spencer-lyon.html" title="See posts by Spencer Lyon">
                         <img class="avatar" alt="Spencer Lyon" src="http://www.gravatar.com/avatar/363fd9a9d8683f3f65f78e1ecde27f5c">
                 </a>
-                <a href="/author/spencer-lyon.html" title="See posts by Spencer Lyon"><h2 class="article-info">Spencer Lyon</h2></a>
+                <a href="http://econforge.github.io/author/spencer-lyon.html" title="See posts by Spencer Lyon"><h2 class="article-info">Spencer Lyon</h2></a>
                 <small class="about-author">PhD Student NYU Stern Economics</small>
                 <h5>Published</h5>
                 <p>juin 26, 2014</p>
@@ -86,8 +87,8 @@ jQuery(document).ready(function($) {
                 <header class="post-header">
                     <h1>My super title</h1>
                         <p class="post-meta">
-                            // under                                 <a class="post-category" href="/tag/pelican.html">pelican</a>
-                                <a class="post-category" href="/tag/publishing.html">publishing</a>
+                            // under                                 <a class="post-category" href="http://econforge.github.io/tag/pelican.html">pelican</a>
+                                <a class="post-category" href="http://econforge.github.io/tag/publishing.html">publishing</a>
                         </p>
                 </header>
             </section>
@@ -3513,7 +3514,22 @@ In&nbsp;[]:
 </pre></div>
             <div class="hr"></div>
             <a href="#" class="go-top">Go Top</a>
-<footer class="footer">
+<div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = "econforgeblog"; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div><footer class="footer">
     <p>&copy; EconForge &ndash;
         Built with <a href="https://github.com/PurePelicanTheme/pure">Pure Theme</a>
         for <a href="http://blog.getpelican.com/">Pelican</a>
@@ -3544,6 +3560,16 @@ In&nbsp;[]:
         $('body').on('click', 'a[href="#"]', function(event) {
             event.preventDefault();
         });
+    </script>
+    <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+        try {
+            var pageTracker = _gat._getTracker("UA-46021038-2");
+            pageTracker._trackPageview();
+            } catch(err) {}
     </script>
 </body>
 </html>
