@@ -47,7 +47,8 @@ DEFAULT_PAGINATION = 10
 #RELATIVE_URLS = True
 
 # This requires Pelican 3.3+
-STATIC_PATHS = ['images', 'figures', 'downloads', 'css', 'favicon.ico']
+STATIC_PATHS = ['images', 'figures', 'downloads', 'css', 'favicon.ico', 'extra/CNAME']
+EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},}
 EXTRA_HEADER = open('_nb_javascript.html').read().decode('utf-8')
 
 CODE_DIR = 'downloads/code'
