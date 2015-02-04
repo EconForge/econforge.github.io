@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>EconForge</title><link>http://econforge.github.io/</link><description>Where economists come for code</description><atom:link href="http://econforge.github.io/feeds/pablo-winant.rss.xml" rel="self"></atom:link><lastBuildDate>Sat, 26 Jul 2014 12:00:00 -0400</lastBuildDate><item><title>Optimization: the N-armed bandit problem</title><link>http://econforge.github.io/posts/2014/juil./26/n-armed%20bandit/</link><description>&lt;p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>EconForge</title><link>http://www.econforge.org/</link><description>Where economists come for code</description><atom:link href="http://www.econforge.org/feeds/pablo-winant.rss.xml" rel="self"></atom:link><lastBuildDate>Sat, 26 Jul 2014 12:00:00 -0400</lastBuildDate><item><title>Optimization: the N-armed bandit problem</title><link>http://www.econforge.org/posts/2014/juil./26/n-armed%20bandit/</link><description>&lt;p&gt;
 &lt;div class="cell border-box-sizing text_cell rendered"&gt;
 &lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;
@@ -1709,4 +1709,4 @@ k3LnS1tKAAAAAElFTkSuQmCC
 &lt;p&gt;Note that here, the Monte-Carlo approach performs better than the &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt; greedy approach. However, no generalization should be made out of it.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Pablo Winant</dc:creator><pubDate>Sat, 26 Jul 2014 12:00:00 -0400</pubDate><guid>tag:econforge.github.io,2014-07-26:posts/2014/juil./26/n-armed bandit/</guid><category>reinforcement learning</category><category>numba</category><category>vectorization</category></item></channel></rss>
+&lt;/div&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Pablo Winant</dc:creator><pubDate>Sat, 26 Jul 2014 12:00:00 -0400</pubDate><guid>tag:www.econforge.org,2014-07-26:posts/2014/juil./26/n-armed bandit/</guid><category>reinforcement learning</category><category>numba</category><category>vectorization</category></item></channel></rss>
