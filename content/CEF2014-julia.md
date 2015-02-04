@@ -4,8 +4,8 @@ Category: Julia
 Tags: HP filter, yield-to-maturity, gauss-hermite, sovereign default
 Slug: cef2014-julia
 Authors: Sébastien Villemot
-about_author: Economist at CEPREMAP
-email: sebastien@dynare.org
+about_author: Economist
+email: sebastien.villemot@sciencespo.fr
 Summary: A short introduction to Julia with examples of interest for economists
 
 The following is the presentation that I gave at the Computational in Economics
@@ -15,9 +15,9 @@ Note that all Julia packages used in this notebook are installable directly with
 
 {% notebook CEF2014-julia.ipynb %}
 
-Copyright © 2014 Sébastien Villemot `<sebastien@dynare.org>`
+Copyright © 2014 Sébastien Villemot `<sebastien.villemot@sciencespo.fr>`
 
-License: [Creative Commons Attribution-Share Alike 3.0](http://creativecommons.org/licenses/by-sa/3.0/) or [GNU General Public License version 3 or later](http://www.gnu.org/licenses/gpl.html)
+License: [Creative Commons Attribution-Share Alike 4.0](http://creativecommons.org/licenses/by-sa/4.0/) or [GNU General Public License version 3 or later](http://www.gnu.org/licenses/gpl.html)
 
 
 
