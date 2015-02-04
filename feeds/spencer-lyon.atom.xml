@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>EconForge</title><link href="http://econforge.github.io/" rel="alternate"></link><link href="http://econforge.github.io/feeds/spencer-lyon.atom.xml" rel="self"></link><id>http://econforge.github.io/</id><updated>2014-06-26T23:31:00-04:00</updated><entry><title>Another great title</title><link href="http://econforge.github.io/posts/2014/Jun/26/another-great-title/" rel="alternate"></link><updated>2014-06-26T23:31:00-04:00</updated><author><name>Spencer Lyon</name></author><id>tag:econforge.github.io,2014-06-26:posts/2014/Jun/26/another-great-title/</id><summary type="html">&lt;h1&gt;Test post&lt;/h1&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>EconForge</title><link href="http://econforge.github.io/" rel="alternate"></link><link href="http://econforge.github.io/feeds/spencer-lyon.atom.xml" rel="self"></link><id>http://econforge.github.io/</id><updated>2014-06-26T23:31:00-04:00</updated><entry><title>Another great title</title><link href="http://econforge.github.io/posts/2014/juin/26/another-great-title/" rel="alternate"></link><updated>2014-06-26T23:31:00-04:00</updated><author><name>Spencer Lyon</name></author><id>tag:econforge.github.io,2014-06-26:posts/2014/juin/26/another-great-title/</id><summary type="html">&lt;h1&gt;Test post&lt;/h1&gt;
 &lt;p&gt;This is another post&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -31,30 +31,14 @@
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;Before getting to the code, we need to derive some thoretical results.&lt;/p&gt;
-&lt;p&gt;We would like to choose $\bar{w}$ such that $y_t$ always has mean $1$. Do to that we need the first two moments of $w_t$.&lt;/p&gt;
-&lt;p&gt;\begin{align*}
-E[w_t] &amp;amp;= E \left[\bar{w} + \rho w_{t-1} + \epsilon_t \right] \\
-&amp;amp;= \bar{w} + \rho E[w] \\
-E[w] &amp;amp;= \frac{\bar{w}}{1 - \rho}
-\end{align*}&lt;/p&gt;
-&lt;p&gt;\begin{align*}
-var(w_t) &amp;amp;= var \left(\bar{w} + \rho w_{t-1} + \epsilon_t \right) \\
-&amp;amp;= \rho^2 var(w_{t-1}) + var(\epsilon_t) \\
-&amp;amp;= \rho^2 var(w_{t-1}) + \sigma_{\epsilon}^2 \\
-var(w) &amp;amp;= \frac{\sigma_{\epsilon}^2}{1 - \rho^2}
-\end{align*}&lt;/p&gt;
-&lt;p&gt;This means that $w \sim N \left(\frac{\bar{w}}{1 - \rho}, \frac{\sigma_{\epsilon}^2}{1 - \rho^2} \right)$ and then $y \sim \log N \left(\frac{\bar{w}}{1 - \rho}, \frac{\sigma_{\epsilon}^2}{1 - \rho^2} \right)$. &lt;/p&gt;
-&lt;p&gt;$$
+&lt;p&gt;We would like to choose &lt;span class="math"&gt;\(\bar{w}\)&lt;/span&gt; such that &lt;span class="math"&gt;\(y_t\)&lt;/span&gt; always has mean &lt;span class="math"&gt;\(1\)&lt;/span&gt;. Do to that we need the first two moments of &lt;span class="math"&gt;\(w_t\)&lt;/span&gt;.&lt;/p&gt;
+
+
+&lt;p&gt;This means that &lt;span class="math"&gt;\(w \sim N \left(\frac{\bar{w}}{1 - \rho}, \frac{\sigma_{\epsilon}^2}{1 - \rho^2} \right)\)&lt;/span&gt; and then &lt;span class="math"&gt;\(y \sim \log N \left(\frac{\bar{w}}{1 - \rho}, \frac{\sigma_{\epsilon}^2}{1 - \rho^2} \right)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;span class="math"&gt;\[
 E_t[y_t] = \exp \left(\frac{\bar{w}}{1 - \rho} +  \frac{\sigma_{\epsilon}^2}{2(1 - \rho^2)}\right)
-$$&lt;/p&gt;
-&lt;p&gt;We want $E[y] = 1$, which gives&lt;/p&gt;
-&lt;p&gt;\begin{align*}
-E_t[y_t] = 1 &amp;amp;= \exp \left(\frac{\bar{w}}{1 - \rho} +  \frac{\sigma_{\epsilon}^2}{2(1 - \rho^2)}\right) \\
-0 &amp;amp;= \frac{\bar{w}}{1 - \rho} +  \frac{\sigma_{\epsilon}^2}{2(1 - \rho^2)} \\
-\bar{w} &amp;amp;= \frac{- \sigma_{\epsilon}^2 (1 - \rho)}{2 (1 - \rho^2)} \\
-\bar{w} &amp;amp;= \frac{- \sigma_{\epsilon}^2 (1 - \rho)}{2 (1 - \rho)(1 + \rho)} \\
-\bar{w} &amp;amp;= \frac{- \sigma_{\epsilon}^2}{2 (1 + \rho)}
-\end{align*}&lt;/p&gt;
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;We want &lt;span class="math"&gt;\(E[y] = 1\)&lt;/span&gt;, which gives&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -143,7 +127,7 @@ INFO: Loading help data...
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h3 id="a-b-"&gt;a-b)&lt;/h3&gt;
+&lt;h3 id="a-b"&gt;a-b)&lt;/h3&gt;
 &lt;p&gt;Below I will use the functions defined in &lt;code&gt;discretize.jl&lt;/code&gt; to approximate the Markov process using the Tauchen method with five and ten state Markov chains.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -211,7 +195,7 @@ Tauchen method with 10 state Markov process:
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h3 id="c-"&gt;c)&lt;/h3&gt;
+&lt;h3 id="c"&gt;c)&lt;/h3&gt;
 &lt;p&gt;Below I will use the Rouwenhorst function to compute a 5 state Markov approximation of the AR(1) process.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -270,13 +254,13 @@ Rouwenhorst method with 5 state Markov process:
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h3 id="d-"&gt;d)&lt;/h3&gt;
-&lt;p&gt;Below I repeat part c, but with a value for the parameter $\rho$. This requires updating our value of $\sigma_{\epsilon}$ and, by extension, $\bar{w}$. We know that we would like the standard deviation to be the same as in part a, which was &lt;/p&gt;
-&lt;p&gt;$$\frac{\sigma_{\epsilon}}{\sqrt{1 - \rho^2}}.$$&lt;/p&gt;
-&lt;p&gt;The new standard deviation would be &lt;/p&gt;
-&lt;p&gt;$$\frac{\sigma_{\epsilon_d}}{\sqrt{1 - \rho_d^2}}.$$&lt;/p&gt;
+&lt;h3 id="d"&gt;d)&lt;/h3&gt;
+&lt;p&gt;Below I repeat part c, but with a value for the parameter &lt;span class="math"&gt;\(\rho\)&lt;/span&gt;. This requires updating our value of &lt;span class="math"&gt;\(\sigma_{\epsilon}\)&lt;/span&gt; and, by extension, &lt;span class="math"&gt;\(\bar{w}\)&lt;/span&gt;. We know that we would like the standard deviation to be the same as in part a, which was&lt;/p&gt;
+&lt;p&gt;&lt;span class="math"&gt;\[\frac{\sigma_{\epsilon}}{\sqrt{1 - \rho^2}}.\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The new standard deviation would be&lt;/p&gt;
+&lt;p&gt;&lt;span class="math"&gt;\[\frac{\sigma_{\epsilon_d}}{\sqrt{1 - \rho_d^2}}.\]&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;So, the transformation we are looking for is&lt;/p&gt;
-&lt;p&gt;$$\sigma_{\epsilon_d} = \sigma_{\epsilon_d} \frac{\sqrt{1 - \rho_d^2}}{\sqrt{1 - \rho_a^2}}$$&lt;/p&gt;
+&lt;p&gt;&lt;span class="math"&gt;\[\sigma_{\epsilon_d} = \sigma_{\epsilon_d} \frac{\sqrt{1 - \rho_d^2}}{\sqrt{1 - \rho_a^2}}\]&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -347,7 +331,7 @@ Tauchen method with 5 state Markov process (new params):
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;h2 id="problem-2"&gt;Problem 2&lt;/h2&gt;
-&lt;p&gt;Before answering each part of this question I will compute all the decision rules and do all the simulations in parallel. &lt;/p&gt;
+&lt;p&gt;Before answering each part of this question I will compute all the decision rules and do all the simulations in parallel.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -431,7 +415,7 @@ In&amp;nbsp;[2]:
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h3 id="a-b-"&gt;a-b)&lt;/h3&gt;
+&lt;h3 id="a-b"&gt;a-b)&lt;/h3&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -482,7 +466,7 @@ gamma | St-dev(c)
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;The results we obtained via our simluations are quite intuitive. We see that as $\gamma \uparrow$ we have a decrease in the standard deviation of consumption. This comes because as agents become more risk averse, the precationary savings motive increases, and agents strive harder to smooth consumption (leading to a lower standard deviation).&lt;/p&gt;
+&lt;p&gt;The results we obtained via our simluations are quite intuitive. We see that as &lt;span class="math"&gt;\(\gamma \uparrow\)&lt;/span&gt; we have a decrease in the standard deviation of consumption. This comes because as agents become more risk averse, the precationary savings motive increases, and agents strive harder to smooth consumption (leading to a lower standard deviation).&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -491,7 +475,7 @@ gamma | St-dev(c)
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h3 id="c-"&gt;c)&lt;/h3&gt;
+&lt;h3 id="c"&gt;c)&lt;/h3&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -556,7 +540,7 @@ PyObject &amp;lt;matplotlib.text.Text object at 0x11ba83490&amp;gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h3 id="d-"&gt;d)&lt;/h3&gt;
+&lt;h3 id="d"&gt;d)&lt;/h3&gt;
 &lt;p&gt;Below I compute the average consumption for each agent in my simulated panel and then plot the results for the economy with a no borrowing limit and with the natural borrowing limit.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -612,8 +596,8 @@ In&amp;nbsp;[4]:
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;It may seem counter-intuitive that when the borrowing constraint is looser, the average lifetime consumption of the agents is lower. &lt;/p&gt;
-&lt;p&gt;Let&amp;#39;s do some more simulations to experiment with this result. I claim that one possible explaination is that agents are trying to maximize expected present discounted value of utility from consumption, not the expected value of average lifetime utilty from consumption. The distinction is subtle, but important. The less restrictive borrowing constraint allows agents to go on a consumption binge in the early periods of his life, when the discounted value of consumption is relatively higher than it is later in the agent&amp;#39;s life. However, budget constraints still need to be satisfied, so in order to finance high early consumption, agents are willing to maintain a relatively lower consumption later in life, leading to lower average consumption over a long horizon.&lt;/p&gt;
+&lt;p&gt;It may seem counter-intuitive that when the borrowing constraint is looser, the average lifetime consumption of the agents is lower.&lt;/p&gt;
+&lt;p&gt;Let's do some more simulations to experiment with this result. I claim that one possible explaination is that agents are trying to maximize expected present discounted value of utility from consumption, not the expected value of average lifetime utilty from consumption. The distinction is subtle, but important. The less restrictive borrowing constraint allows agents to go on a consumption binge in the early periods of his life, when the discounted value of consumption is relatively higher than it is later in the agent's life. However, budget constraints still need to be satisfied, so in order to finance high early consumption, agents are willing to maintain a relatively lower consumption later in life, leading to lower average consumption over a long horizon.&lt;/p&gt;
 &lt;p&gt;Below we will simulate a sequence of much smaller panels, where each element in the sequence gets a different starting value. This will help us see what happens at the beginning of the simulation period to verify if our hypothesis is correct.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -699,7 +683,7 @@ In&amp;nbsp;[17]:
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h3 id="e-"&gt;e)&lt;/h3&gt;
+&lt;h3 id="e"&gt;e)&lt;/h3&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -776,12 +760,12 @@ a_min   | psi
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;The problem states the following:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Argue that, based on the value of $\psi$ the model where the borrowing limit is looser displays more consumption insurance.&lt;/p&gt;
+&lt;p&gt;Argue that, based on the value of &lt;span class="math"&gt;\(\psi\)&lt;/span&gt; the model where the borrowing limit is looser displays more consumption insurance.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;As can be seen above, the results from my simluation are that the model with the no borrowing constraint displays more consumption insurance. Although it is not what Gianluca was expecting, I feel that this result is intuitive for the following. In the model with no borrowing constraint agents will be willing to purchase more insurance in order to save against a possible future where a bad realization of shocks hits (meaning they have low income) an they are unable to borrow to finance consumption (because of the no borrowing constraint). Agents that have a looser borrowing constraint do not have quite as strong as a motive for precautionary savings, because if they find themselves in the position we just described, they will be able to borrow to fund consumption.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;/p&gt;</summary><category term="pelican"></category><category term="publishing"></category><category term="test"></category></entry><entry><title>My super title</title><link href="http://econforge.github.io/posts/2014/Jun/26/my-super-post/" rel="alternate"></link><updated>2014-06-26T10:54:00-04:00</updated><author><name>Spencer Lyon</name></author><id>tag:econforge.github.io,2014-06-26:posts/2014/Jun/26/my-super-post/</id><summary type="html">&lt;h1&gt;Test post&lt;/h1&gt;
+&lt;/div&gt;&lt;/p&gt;</summary><category term="pelican"></category><category term="publishing"></category><category term="test"></category></entry><entry><title>My super title</title><link href="http://econforge.github.io/posts/2014/juin/26/my-super-post/" rel="alternate"></link><updated>2014-06-26T10:54:00-04:00</updated><author><name>Spencer Lyon</name></author><id>tag:econforge.github.io,2014-06-26:posts/2014/juin/26/my-super-post/</id><summary type="html">&lt;h1&gt;Test post&lt;/h1&gt;
 &lt;p&gt;This is a post&lt;/p&gt;
 &lt;p&gt;
 &lt;div class="cell border-box-sizing code_cell rendered"&gt;
@@ -4179,7 +4163,7 @@ In&amp;nbsp;[1]:
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;Here is some math:&lt;/p&gt;
-&lt;p&gt;$e^{i \pi} + 1 = 0$&lt;/p&gt;
+&lt;p&gt;&lt;span class="math"&gt;\(e^{i \pi} + 1 = 0\)&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;

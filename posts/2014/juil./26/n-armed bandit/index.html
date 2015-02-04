@@ -100,10 +100,9 @@ jQuery(document).ready(function($) {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="the-n-armed-bandit-problems">The N-armed bandit problems</h1>
-<p>Let&#39;s look at a famous reinforcement learning problem called the N-armed bandit problem. A client in a casino, has access to several levers, each one yielding money with a different distribution of probabilities. Given that the client has no prior knowledge of these distributions, he must tries each lever several times before he can infer which one is best. Of course, this involves a tradeoff between trying a lever whose payoff is uncertain (a.k.a exploring) and repeatedly using the lever that yields the highest return in average.</p>
-<p>This seemingly simple problem is a classic in the machine learning field and many nontrivial algorithm were devised to find an operational solution to it. Inspiration for the examples below example was drawn from <em>Reinforcement Learning:
-An Introduction</em>, a book by Richard S. Sutton and Andrew G. Barto, which is also available as <a href="http://webdocs.cs.ualberta.ca/~sutton/book/the-book.html">html</a></p>
-<p>Here, I consider only two very simple strategies, namely Monte-Carlo simulations and an $\epsilon$-greedy strategy. Their performance is assessed by running a large number of simulations for each of them. The programming challenge will be to write a Python program whose computation time does not increase to fast so as to make this comparison feasible. Luckily, Python has many available options to optimize optimize. We will use this learning exercise to review two of them: vectorization and Just-In-Time copmilation.</p>
+<p>Let's look at a famous reinforcement learning problem called the N-armed bandit problem. A client in a casino, has access to several levers, each one yielding money with a different distribution of probabilities. Given that the client has no prior knowledge of these distributions, he must tries each lever several times before he can infer which one is best. Of course, this involves a tradeoff between trying a lever whose payoff is uncertain (a.k.a exploring) and repeatedly using the lever that yields the highest return in average.</p>
+<p>This seemingly simple problem is a classic in the machine learning field and many nontrivial algorithm were devised to find an operational solution to it. Inspiration for the examples below example was drawn from <em>Reinforcement Learning: An Introduction</em>, a book by Richard S. Sutton and Andrew G. Barto, which is also available as <a href="http://webdocs.cs.ualberta.ca/~sutton/book/the-book.html">html</a></p>
+<p>Here, I consider only two very simple strategies, namely Monte-Carlo simulations and an <span class="math">\(\epsilon\)</span>-greedy strategy. Their performance is assessed by running a large number of simulations for each of them. The programming challenge will be to write a Python program whose computation time does not increase to fast so as to make this comparison feasible. Luckily, Python has many available options to optimize optimize. We will use this learning exercise to review two of them: vectorization and Just-In-Time copmilation.</p>
 <p>[This notebook was initially conceived as an interactive exercise for the Workshop on High Performance Computing that took place before the CEF 2014 conference in <a href="http://comp-econ.org/CEF_2014/Oslo">Oslo</a>. Each bullet point was meant as a question to solve by participant. You can download the initial exercise without the answers from here : [give link].</p>
 </div>
 </div>
@@ -113,9 +112,9 @@ An Introduction</em>, a book by Richard S. Sutton and Andrew G. Barto, which is 
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="try-it-yourself-">Try it yourself !</h2>
+<h2 id="try-it-yourself">Try it yourself !</h2>
 <p>If you run this notebook on your computer, and if you drop the <code>n_armed_bandit_game.py</code>, in the same directory as the notebook, you can try to play the N-armed bandit game yourself.</p>
-<p>Click each button in turn and try to maximize the total discounted value. The value reported next to each button $i$ is the average of the past payoffs for bandit $i$.</p>
+<p>Click each button in turn and try to maximize the total discounted value. The value reported next to each button <span class="math">\(i\)</span> is the average of the past payoffs for bandit <span class="math">\(i\)</span>.</p>
 </div>
 </div>
 </div>
@@ -143,12 +142,12 @@ In&nbsp;[1]:
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="definition-of-the-problem">Definition of the problem</h2>
-<p>Let&#39;s define the problem more formally.</p>
-<p>Take N random distributions $\left(d(n)\right)_{n\in[1,N]}$. Each distribution is called an arm of the machine.</p>
-<p>The Player faces a machine with $N$ arms. Each arm $n\in[1,N]$ gives a stochastic payoff $d(n)$ which is i.i.d.</p>
-<p>The distribution of the rewards is unknown but at each date $t\in [1,T]$ the player can take an action $n$ and get the stochastic payoff $d(n)$.</p>
-<p>His goal is to choose a series of actions $(a_t)_{0\leq t \leq T}$  at each time to maximize intertemporal utility $\sum_{0 \leq t \leq T} \beta^t U(d_{a_t})$ with $0&lt;\beta&lt;1$ and $U(x)=\frac{x^{1-\gamma}}{1-\gamma}$ with $\gamma&gt;1$.</p>
-<p>The player doesn&#39;t know the distributions of reward of each arm </p>
+<p>Let's define the problem more formally.</p>
+<p>Take N random distributions <span class="math">\(\left(d(n)\right)_{n\in[1,N]}\)</span>. Each distribution is called an arm of the machine.</p>
+<p>The Player faces a machine with <span class="math">\(N\)</span> arms. Each arm <span class="math">\(n\in[1,N]\)</span> gives a stochastic payoff <span class="math">\(d(n)\)</span> which is i.i.d.</p>
+<p>The distribution of the rewards is unknown but at each date <span class="math">\(t\in [1,T]\)</span> the player can take an action <span class="math">\(n\)</span> and get the stochastic payoff <span class="math">\(d(n)\)</span>.</p>
+<p>His goal is to choose a series of actions <span class="math">\((a_t)_{0\leq t \leq T}\)</span> at each time to maximize intertemporal utility <span class="math">\(\sum_{0 \leq t \leq T} \beta^t U(d_{a_t})\)</span> with <span class="math">\(0&lt;\beta&lt;1\)</span> and <span class="math">\(U(x)=\frac{x^{1-\gamma}}{1-\gamma}\)</span> with <span class="math">\(\gamma&gt;1\)</span>.</p>
+<p>The player doesn't know the distributions of reward of each arm</p>
 </div>
 </div>
 </div>
@@ -158,12 +157,8 @@ In&nbsp;[1]:
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="objective">Objective</h2>
-<p>The goal of this tutorial is to implement to simple learning strategy. </p>
-<ul>
-<li>a stupid Monte-Carlo strategy</li>
-<li>an $\epsilon$ greedy strategy where the optimal action is selected with probability $1-\epsilon$ while a random action is taken with probability $\epsilon$</li>
-</ul>
-<p>Each strategy will be given $K=1000$ different randomly drawn games to play, each of them being a $T=10000$ periods learning episode. Then we will average over the $K$ experiments to which is the best strategy. In particular, we want to find the value of $\epsilon$ that yields the optimal exploration/exploitation tradeoff for our distribution of problems.</p>
+<p>The goal of this tutorial is to implement to simple learning strategy. - a stupid Monte-Carlo strategy - an <span class="math">\(\epsilon\)</span> greedy strategy where the optimal action is selected with probability <span class="math">\(1-\epsilon\)</span> while a random action is taken with probability <span class="math">\(\epsilon\)</span></p>
+<p>Each strategy will be given <span class="math">\(K=1000\)</span> different randomly drawn games to play, each of them being a <span class="math">\(T=10000\)</span> periods learning episode. Then we will average over the <span class="math">\(K\)</span> experiments to which is the best strategy. In particular, we want to find the value of <span class="math">\(\epsilon\)</span> that yields the optimal exploration/exploitation tradeoff for our distribution of problems.</p>
 </div>
 </div>
 </div>
@@ -181,7 +176,7 @@ In&nbsp;[1]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We will assume that the $d(n)$ are normally distributed with standard deviation $1$. The means $(m_n)$ of these distribution are a permutation of the equally distributed points $\left(\frac{n-1}{N-1}\right)_{n\in[1,N]}$.</p>
+<p>We will assume that the <span class="math">\(d(n)\)</span> are normally distributed with standard deviation <span class="math">\(1\)</span>. The means <span class="math">\((m_n)\)</span> of these distribution are a permutation of the equally distributed points <span class="math">\(\left(\frac{n-1}{N-1}\right)_{n\in[1,N]}\)</span>.</p>
 </div>
 </div>
 </div>
@@ -264,12 +259,8 @@ In&nbsp;[4]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="finding-the-best-arm-with-monte-carlo-simulations-and-use-vectorized-computations-">Finding the Best Arm with Monte-Carlo simulations (and use vectorized computations)</h1>
-<p>Here we consider a very simple strategy: </p>
-<ul>
-<li>Given an integer $T_1$. During $N T_1$ periods, we use each lever in turn in order to estimate the lever that yields the higher utility.</li>
-<li>Then, until last date $T$, we us the lever for which expected utility is higher.</li>
-</ul>
+<h1 id="finding-the-best-arm-with-monte-carlo-simulations-and-use-vectorized-computations">Finding the Best Arm with Monte-Carlo simulations (and use vectorized computations)</h1>
+<p>Here we consider a very simple strategy: - Given an integer <span class="math">\(T_1\)</span>. During <span class="math">\(N T_1\)</span> periods, we use each lever in turn in order to estimate the lever that yields the higher utility. - Then, until last date <span class="math">\(T\)</span>, we us the lever for which expected utility is higher.</p>
 </div>
 </div>
 </div>
@@ -293,10 +284,10 @@ In&nbsp;[5]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This algorithm can be expressed in a way that doesn&#39;t require any conditional operation. The first and the second step can be expressed as a series of array operations. </p>
-<hr>
+<p>This algorithm can be expressed in a way that doesn't require any conditional operation. The first and the second step can be expressed as a series of array operations.</p>
+<hr />
 <ul>
-<li>create an array <code>&#39;rewards&#39;</code> of size $N \times T_1$ such that each line $n$ contains $T_1$ realizations of the distribution $d(n)$</li>
+<li>create an array <code>'rewards'</code> of size <span class="math">\(N \times T_1\)</span> such that each line <span class="math">\(n\)</span> contains <span class="math">\(T_1\)</span> realizations of the distribution <span class="math">\(d(n)\)</span></li>
 </ul>
 </div>
 </div>
@@ -324,7 +315,7 @@ In&nbsp;[6]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<hr>
+<hr />
 <ul>
 <li>estimate the mean utility procured by each arm and select the best arm</li>
 </ul>
@@ -386,9 +377,9 @@ array([ 0.78126682,  1.32556455,  1.4223774 ,  0.49238937,  1.01025611])
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<hr>
+<hr />
 <ul>
-<li>compute the estimated mean of each distribution and the discounted value of playing each arm in turn during $N T_1$ periods.</li>
+<li>compute the estimated mean of each distribution and the discounted value of playing each arm in turn during <span class="math">\(N T_1\)</span> periods.</li>
 </ul>
 </div>
 </div>
@@ -438,7 +429,7 @@ In&nbsp;[9]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<hr>
+<hr />
 <ul>
 <li>compute the value of the strategy</li>
 </ul>
@@ -492,8 +483,8 @@ In&nbsp;[10]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To profile the efficiency of these computations, the easiest way consists in encapsulate them in a function and profile this functions using IPython&#39;s <code>prun</code> magic.</p>
-<hr>
+<p>To profile the efficiency of these computations, the easiest way consists in encapsulate them in a function and profile this functions using IPython's <code>prun</code> magic.</p>
+<hr />
 <ul>
 <li>encapsulate the algorithm as a function and profile it</li>
 </ul>
@@ -658,9 +649,9 @@ In&nbsp;[14]:
      1000    0.149    0.000    0.149    0.000 {method &#39;rand&#39; of &#39;mtrand.RandomState&#39; objects}
      1000    0.094    0.000    0.102    0.000 function_base.py:8(linspace)
         1    0.030    0.030    1.612    1.612 &lt;string&gt;:1(&lt;module&gt;)
-     1000    0.027    0.000    0.027    0.000 {numpy.core._dotblas.dot}
-</code></pre><p>Appart from the generation of random numbers by the rand method, it looks like most of the time is spent in the vector operations in the <code>semi_monte_carlo</code> method. Since these are presumed to be very efficient, there doesn&#39;t seem to be much room for improvement.</p>
-<p>NOTE: there actually <em>is</em> room for improvements. From an algorithmic perspective, the procedure could be vectorized across all experiments. Also, vectorized operations using <code>numpy</code> arrays are much better than interpreted loops but they don&#39;t make efficiently use of CPU and memory resources. <code>numexpr</code> and <code>theano</code> are two libraries that seek to optimize this kind of vector operations. I leave it as an exercise for the reader, or for a later post.</p>
+     1000    0.027    0.000    0.027    0.000 {numpy.core._dotblas.dot}</code></pre>
+<p>Appart from the generation of random numbers by the rand method, it looks like most of the time is spent in the vector operations in the <code>semi_monte_carlo</code> method. Since these are presumed to be very efficient, there doesn't seem to be much room for improvement.</p>
+<p>NOTE: there actually <em>is</em> room for improvements. From an algorithmic perspective, the procedure could be vectorized across all experiments. Also, vectorized operations using <code>numpy</code> arrays are much better than interpreted loops but they don't make efficiently use of CPU and memory resources. <code>numexpr</code> and <code>theano</code> are two libraries that seek to optimize this kind of vector operations. I leave it as an exercise for the reader, or for a later post.</p>
 </div>
 </div>
 </div>
@@ -669,7 +660,7 @@ In&nbsp;[14]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<hr>
+<hr />
 <ul>
 <li>Find the optimal number of periods to spend on monte-carlo evaluations</li>
 </ul>
@@ -1203,7 +1194,7 @@ BVces34AAAAASUVORK5CYII=
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The first panel of the above graph show that explorative steps have a constant payoff over time, equal to 0.5. This is because it treats all levers symetrically. However, more explorative steps, increases in expectation the payoff of the final phase because it produces more information about which is the optimal lever to triger. The lower panel is consistent with this observation: it shows that the best button is selected more often when more explorative steps are taken.vec</p>
-<p>Of course, the as soon as some information is known about the better levers, exploration becomes more costly because it implies underoptimal payoffs. For this reason, there is an optimal number of exploration steps to take, before the greedy approach becomes optimal. In the parametrization that we use, the optimal choice is $T1=2$, meaning that each trigger is triggered two times exactly, before the agent selects the higher yielding one.</p>
+<p>Of course, the as soon as some information is known about the better levers, exploration becomes more costly because it implies underoptimal payoffs. For this reason, there is an optimal number of exploration steps to take, before the greedy approach becomes optimal. In the parametrization that we use, the optimal choice is <span class="math">\(T1=2\)</span>, meaning that each trigger is triggered two times exactly, before the agent selects the higher yielding one.</p>
 </div>
 </div>
 </div>
@@ -1212,19 +1203,10 @@ BVces34AAAAASUVORK5CYII=
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="-0-greedy-strategies">$\epsilon$-greedy strategies</h1>
-<p>We now consider a more elaborate strategy. Like in the former algorithm, we maintain a guess for the expected reward of each arm.
-But at each step we choose between &quot;exploiting&quot; the best option or &quot;exploring&quot; another one at random.</p>
+<h1 id="epsilon-greedy-strategies"><span class="math">\(\epsilon\)</span>-greedy strategies</h1>
+<p>We now consider a more elaborate strategy. Like in the former algorithm, we maintain a guess for the expected reward of each arm. But at each step we choose between &quot;exploiting&quot; the best option or &quot;exploring&quot; another one at random.</p>
 <p>Here is the definition of the algorithm. At each step:</p>
-<p>At each step: </p>
-<ul>
-<li>take an action<ul>
-<li>with probability $1-\epsilon$, choose the arm that is believed to have higher return (greedy option)</li>
-<li>with probability $\epsilon$ take another arm at random    </li>
-</ul>
-</li>
-<li>Update the expection of the chosen option.</li>
-</ul>
+<p>At each step: - take an action - with probability <span class="math">\(1-\epsilon\)</span>, choose the arm that is believed to have higher return (greedy option) - with probability <span class="math">\(\epsilon\)</span> take another arm at random<br />- Update the expection of the chosen option.</p>
 </div>
 </div>
 </div>
@@ -1233,7 +1215,7 @@ But at each step we choose between &quot;exploiting&quot; the best option or &qu
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<hr>
+<hr />
 <ul>
 <li>implement the epsilon-greedy algorithm</li>
 </ul>
@@ -1304,9 +1286,9 @@ In&nbsp;[18]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<hr>
+<hr />
 <ul>
-<li>compute the average return over $K$ experiments for $\epsilon=0.01$</li>
+<li>compute the average return over <span class="math">\(K\)</span> experiments for <span class="math">\(\epsilon=0.01\)</span></li>
 </ul>
 </div>
 </div>
@@ -1361,7 +1343,7 @@ Wall time: 56.4 s
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Aouch, this naive approach took approximately one minute to complete... But we can certainly do better. As we did before, we will try to locate bottlenecks by profiling the code.</p>
-<hr>
+<hr />
 <ul>
 <li>profile using prun</li>
 </ul>
@@ -1416,14 +1398,8 @@ In&nbsp;[20]:
  10000000    2.539    0.000    2.539    0.000 {method &#39;randn&#39; of &#39;mtrand.RandomState&#39; objects}
  10000000    1.794    0.000    1.794    0.000 {method &#39;rand&#39; of &#39;mtrand.RandomState&#39; objects}
     10001    0.114    0.000    0.114    0.000 {range}
-    10000    0.048    0.000    0.048    0.000 {numpy.core.multiarray.copyto}
-</code></pre><p>Here is how we can decode these timings:</p>
-<ul>
-<li>41 seconds are spent in the play function (excluding calls to functions) in doing  basic operations. This is something that we can certainly reduce a lot by compiling the corresponding code with Numba.</li>
-<li>13 seconds are spent in calling the pick function that also consists in one addition, one substration and some subscripting. Here is cost of defining a convenience function looks prohibitive, we will integrate it in the main loop</li>
-<li>5 seconds are spent waiting for the function argmax to complete. We don&#39;t need it anyway and will replace it by a manual comparison of two values.</li>
-<li>4 seconds are spent in the random generator <code>rand</code> and <code>randn</code>. To minimize overhead, we will vectorize them.</li>
-</ul>
+    10000    0.048    0.000    0.048    0.000 {numpy.core.multiarray.copyto}</code></pre>
+<p>Here is how we can decode these timings: - 41 seconds are spent in the play function (excluding calls to functions) in doing basic operations. This is something that we can certainly reduce a lot by compiling the corresponding code with Numba. - 13 seconds are spent in calling the pick function that also consists in one addition, one substration and some subscripting. Here is cost of defining a convenience function looks prohibitive, we will integrate it in the main loop - 5 seconds are spent waiting for the function argmax to complete. We don't need it anyway and will replace it by a manual comparison of two values. - 4 seconds are spent in the random generator <code>rand</code> and <code>randn</code>. To minimize overhead, we will vectorize them.</p>
 <p>The result of these optimization will be a preamble where we draw all random numbers in advance, followed by all conditional steps written with only simple python constructs. That will allow the use of the <code>njit</code> compiler of numba that lowers all objects to low-level objects. (think: &quot;like if they were translated to C&quot;).</p>
 </div>
 </div>
@@ -1433,7 +1409,7 @@ In&nbsp;[20]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<hr>
+<hr />
 <ul>
 <li>optimize function play using numba</li>
 </ul>
@@ -1558,8 +1534,8 @@ Wall time: 1.37 s
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This is much better ! We have divided the time by 40.</p>
-<p>Now we can try to vary the exploration parameter $\epsilon$ to see if the $\epsilon$-greedy can perform better than the very simple Monte-Carlo strategy. </p>
-<hr>
+<p>Now we can try to vary the exploration parameter <span class="math">\(\epsilon\)</span> to see if the <span class="math">\(\epsilon\)</span>-greedy can perform better than the very simple Monte-Carlo strategy.</p>
+<hr />
 <ul>
 <li>Find the epsilon that maximzes average value over K simulations</li>
 </ul>
@@ -1823,8 +1799,8 @@ k3LnS1tKAAAAAElFTkSuQmCC
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>For this parametrization of the problem, the optimal $\epsilon$ is approximately $0.2$. This means that one selects what is believed to be the best lever with probability 80%, while a random choice is made with probability 20%.</p>
-<p>Note that here, the Monte-Carlo approach performs better than the $\epsilon$ greedy approach. However, no generalization should be made out of it.</p>
+<p>For this parametrization of the problem, the optimal <span class="math">\(\epsilon\)</span> is approximately <span class="math">\(0.2\)</span>. This means that one selects what is believed to be the best lever with probability 80%, while a random choice is made with probability 20%.</p>
+<p>Note that here, the Monte-Carlo approach performs better than the <span class="math">\(\epsilon\)</span> greedy approach. However, no generalization should be made out of it.</p>
 </div>
 </div>
 </div></p>

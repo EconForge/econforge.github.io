@@ -124,30 +124,14 @@ jQuery(document).ready(function($) {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Before getting to the code, we need to derive some thoretical results.</p>
-<p>We would like to choose $\bar{w}$ such that $y_t$ always has mean $1$. Do to that we need the first two moments of $w_t$.</p>
-<p>\begin{align*}
-E[w_t] &amp;= E \left[\bar{w} + \rho w_{t-1} + \epsilon_t \right] \\
-&amp;= \bar{w} + \rho E[w] \\
-E[w] &amp;= \frac{\bar{w}}{1 - \rho}
-\end{align*}</p>
-<p>\begin{align*}
-var(w_t) &amp;= var \left(\bar{w} + \rho w_{t-1} + \epsilon_t \right) \\
-&amp;= \rho^2 var(w_{t-1}) + var(\epsilon_t) \\
-&amp;= \rho^2 var(w_{t-1}) + \sigma_{\epsilon}^2 \\
-var(w) &amp;= \frac{\sigma_{\epsilon}^2}{1 - \rho^2}
-\end{align*}</p>
-<p>This means that $w \sim N \left(\frac{\bar{w}}{1 - \rho}, \frac{\sigma_{\epsilon}^2}{1 - \rho^2} \right)$ and then $y \sim \log N \left(\frac{\bar{w}}{1 - \rho}, \frac{\sigma_{\epsilon}^2}{1 - \rho^2} \right)$. </p>
-<p>$$
+<p>We would like to choose <span class="math">\(\bar{w}\)</span> such that <span class="math">\(y_t\)</span> always has mean <span class="math">\(1\)</span>. Do to that we need the first two moments of <span class="math">\(w_t\)</span>.</p>
+
+
+<p>This means that <span class="math">\(w \sim N \left(\frac{\bar{w}}{1 - \rho}, \frac{\sigma_{\epsilon}^2}{1 - \rho^2} \right)\)</span> and then <span class="math">\(y \sim \log N \left(\frac{\bar{w}}{1 - \rho}, \frac{\sigma_{\epsilon}^2}{1 - \rho^2} \right)\)</span>.</p>
+<p><span class="math">\[
 E_t[y_t] = \exp \left(\frac{\bar{w}}{1 - \rho} +  \frac{\sigma_{\epsilon}^2}{2(1 - \rho^2)}\right)
-$$</p>
-<p>We want $E[y] = 1$, which gives</p>
-<p>\begin{align*}
-E_t[y_t] = 1 &amp;= \exp \left(\frac{\bar{w}}{1 - \rho} +  \frac{\sigma_{\epsilon}^2}{2(1 - \rho^2)}\right) \\
-0 &amp;= \frac{\bar{w}}{1 - \rho} +  \frac{\sigma_{\epsilon}^2}{2(1 - \rho^2)} \\
-\bar{w} &amp;= \frac{- \sigma_{\epsilon}^2 (1 - \rho)}{2 (1 - \rho^2)} \\
-\bar{w} &amp;= \frac{- \sigma_{\epsilon}^2 (1 - \rho)}{2 (1 - \rho)(1 + \rho)} \\
-\bar{w} &amp;= \frac{- \sigma_{\epsilon}^2}{2 (1 + \rho)}
-\end{align*}</p>
+\]</span></p>
+<p>We want <span class="math">\(E[y] = 1\)</span>, which gives</p>
 </div>
 </div>
 </div>
@@ -236,7 +220,7 @@ INFO: Loading help data...
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="a-b-">a-b)</h3>
+<h3 id="a-b">a-b)</h3>
 <p>Below I will use the functions defined in <code>discretize.jl</code> to approximate the Markov process using the Tauchen method with five and ten state Markov chains.</p>
 </div>
 </div>
@@ -304,7 +288,7 @@ Tauchen method with 10 state Markov process:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="c-">c)</h3>
+<h3 id="c">c)</h3>
 <p>Below I will use the Rouwenhorst function to compute a 5 state Markov approximation of the AR(1) process.</p>
 </div>
 </div>
@@ -363,13 +347,13 @@ Rouwenhorst method with 5 state Markov process:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="d-">d)</h3>
-<p>Below I repeat part c, but with a value for the parameter $\rho$. This requires updating our value of $\sigma_{\epsilon}$ and, by extension, $\bar{w}$. We know that we would like the standard deviation to be the same as in part a, which was </p>
-<p>$$\frac{\sigma_{\epsilon}}{\sqrt{1 - \rho^2}}.$$</p>
-<p>The new standard deviation would be </p>
-<p>$$\frac{\sigma_{\epsilon_d}}{\sqrt{1 - \rho_d^2}}.$$</p>
+<h3 id="d">d)</h3>
+<p>Below I repeat part c, but with a value for the parameter <span class="math">\(\rho\)</span>. This requires updating our value of <span class="math">\(\sigma_{\epsilon}\)</span> and, by extension, <span class="math">\(\bar{w}\)</span>. We know that we would like the standard deviation to be the same as in part a, which was</p>
+<p><span class="math">\[\frac{\sigma_{\epsilon}}{\sqrt{1 - \rho^2}}.\]</span></p>
+<p>The new standard deviation would be</p>
+<p><span class="math">\[\frac{\sigma_{\epsilon_d}}{\sqrt{1 - \rho_d^2}}.\]</span></p>
 <p>So, the transformation we are looking for is</p>
-<p>$$\sigma_{\epsilon_d} = \sigma_{\epsilon_d} \frac{\sqrt{1 - \rho_d^2}}{\sqrt{1 - \rho_a^2}}$$</p>
+<p><span class="math">\[\sigma_{\epsilon_d} = \sigma_{\epsilon_d} \frac{\sqrt{1 - \rho_d^2}}{\sqrt{1 - \rho_a^2}}\]</span></p>
 </div>
 </div>
 </div>
@@ -440,7 +424,7 @@ Tauchen method with 5 state Markov process (new params):
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="problem-2">Problem 2</h2>
-<p>Before answering each part of this question I will compute all the decision rules and do all the simulations in parallel. </p>
+<p>Before answering each part of this question I will compute all the decision rules and do all the simulations in parallel.</p>
 </div>
 </div>
 </div>
@@ -524,7 +508,7 @@ In&nbsp;[2]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="a-b-">a-b)</h3>
+<h3 id="a-b">a-b)</h3>
 </div>
 </div>
 </div>
@@ -575,7 +559,7 @@ gamma | St-dev(c)
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The results we obtained via our simluations are quite intuitive. We see that as $\gamma \uparrow$ we have a decrease in the standard deviation of consumption. This comes because as agents become more risk averse, the precationary savings motive increases, and agents strive harder to smooth consumption (leading to a lower standard deviation).</p>
+<p>The results we obtained via our simluations are quite intuitive. We see that as <span class="math">\(\gamma \uparrow\)</span> we have a decrease in the standard deviation of consumption. This comes because as agents become more risk averse, the precationary savings motive increases, and agents strive harder to smooth consumption (leading to a lower standard deviation).</p>
 </div>
 </div>
 </div>
@@ -584,7 +568,7 @@ gamma | St-dev(c)
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="c-">c)</h3>
+<h3 id="c">c)</h3>
 </div>
 </div>
 </div>
@@ -649,7 +633,7 @@ PyObject &lt;matplotlib.text.Text object at 0x11ba83490&gt;
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="d-">d)</h3>
+<h3 id="d">d)</h3>
 <p>Below I compute the average consumption for each agent in my simulated panel and then plot the results for the economy with a no borrowing limit and with the natural borrowing limit.</p>
 </div>
 </div>
@@ -705,8 +689,8 @@ In&nbsp;[4]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>It may seem counter-intuitive that when the borrowing constraint is looser, the average lifetime consumption of the agents is lower. </p>
-<p>Let&#39;s do some more simulations to experiment with this result. I claim that one possible explaination is that agents are trying to maximize expected present discounted value of utility from consumption, not the expected value of average lifetime utilty from consumption. The distinction is subtle, but important. The less restrictive borrowing constraint allows agents to go on a consumption binge in the early periods of his life, when the discounted value of consumption is relatively higher than it is later in the agent&#39;s life. However, budget constraints still need to be satisfied, so in order to finance high early consumption, agents are willing to maintain a relatively lower consumption later in life, leading to lower average consumption over a long horizon.</p>
+<p>It may seem counter-intuitive that when the borrowing constraint is looser, the average lifetime consumption of the agents is lower.</p>
+<p>Let's do some more simulations to experiment with this result. I claim that one possible explaination is that agents are trying to maximize expected present discounted value of utility from consumption, not the expected value of average lifetime utilty from consumption. The distinction is subtle, but important. The less restrictive borrowing constraint allows agents to go on a consumption binge in the early periods of his life, when the discounted value of consumption is relatively higher than it is later in the agent's life. However, budget constraints still need to be satisfied, so in order to finance high early consumption, agents are willing to maintain a relatively lower consumption later in life, leading to lower average consumption over a long horizon.</p>
 <p>Below we will simulate a sequence of much smaller panels, where each element in the sequence gets a different starting value. This will help us see what happens at the beginning of the simulation period to verify if our hypothesis is correct.</p>
 </div>
 </div>
@@ -792,7 +776,7 @@ In&nbsp;[17]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="e-">e)</h3>
+<h3 id="e">e)</h3>
 </div>
 </div>
 </div>
@@ -869,7 +853,7 @@ a_min   | psi
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The problem states the following:</p>
 <blockquote>
-<p>Argue that, based on the value of $\psi$ the model where the borrowing limit is looser displays more consumption insurance.</p>
+<p>Argue that, based on the value of <span class="math">\(\psi\)</span> the model where the borrowing limit is looser displays more consumption insurance.</p>
 </blockquote>
 <p>As can be seen above, the results from my simluation are that the model with the no borrowing constraint displays more consumption insurance. Although it is not what Gianluca was expecting, I feel that this result is intuitive for the following. In the model with no borrowing constraint agents will be willing to purchase more insurance in order to save against a possible future where a bad realization of shocks hits (meaning they have low income) an they are unable to borrow to finance consumption (because of the no borrowing constraint). Agents that have a looser borrowing constraint do not have quite as strong as a motive for precautionary savings, because if they find themselves in the position we just described, they will be able to borrow to fund consumption.</p>
 </div>

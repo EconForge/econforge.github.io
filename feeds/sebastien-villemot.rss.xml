@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>EconForge</title><link>http://econforge.github.io/</link><description>Where economists come for code</description><atom:link href="http://econforge.github.io/feeds/sebastien-villemot.rss.xml" rel="self"></atom:link><lastBuildDate>Mon, 28 Jul 2014 12:00:00 -0400</lastBuildDate><item><title>Julia introduction at CEF 2014</title><link>http://econforge.github.io/posts/2014/Jul/28/cef2014-julia/</link><description>&lt;p&gt;The following is the presentation that I gave at the Computational in Economics
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>EconForge</title><link>http://econforge.github.io/</link><description>Where economists come for code</description><atom:link href="http://econforge.github.io/feeds/sebastien-villemot.rss.xml" rel="self"></atom:link><lastBuildDate>Mon, 28 Jul 2014 12:00:00 -0400</lastBuildDate><item><title>Julia introduction at CEF 2014</title><link>http://econforge.github.io/posts/2014/juil./28/cef2014-julia/</link><description>&lt;p&gt;The following is the presentation that I gave at the Computational in Economics
 and Finance (CEF) conference 2014 in Oslo.&lt;/p&gt;
 &lt;p&gt;Note that all Julia packages used in this notebook are installable directly with the package manager. The only exception is the &lt;code&gt;splines&lt;/code&gt; package which is installed with: &lt;code&gt;Pkg.clone("https://github.com/EconForge/splines.git")&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;
@@ -18,16 +18,7 @@ and Finance (CEF) conference 2014 in Oslo.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Julia is a new programming language for technical computing, created at the MIT in 2012. Its main features are:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Syntax close to MATLAB/Octave, with ideas also borrowed from Python, Ruby, Lisp&lt;/li&gt;
-&lt;li&gt;Good performance, close to compiled languages, thanks to just-in-time (JIT) compiler&lt;/li&gt;
-&lt;li&gt;Free software / open source&lt;/li&gt;
-&lt;li&gt;Designed for parallel and distributed computation&lt;/li&gt;
-&lt;li&gt;Easily interfaceable with other languages (C, Fortran, Python)&lt;/li&gt;
-&lt;li&gt;Multiple dispatch: ability to define function behavior across many combinations of argument types&lt;/li&gt;
-&lt;li&gt;Large number of package extensions, lively community&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;Julia is a new programming language for technical computing, created at the MIT in 2012. Its main features are: * Syntax close to MATLAB/Octave, with ideas also borrowed from Python, Ruby, Lisp * Good performance, close to compiled languages, thanks to just-in-time (JIT) compiler * Free software / open source * Designed for parallel and distributed computation * Easily interfaceable with other languages (C, Fortran, Python) * Multiple dispatch: ability to define function behavior across many combinations of argument types * Large number of package extensions, lively community&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -46,10 +37,8 @@ and Finance (CEF) conference 2014 in Oslo.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Here we show how to implement a Hodrick-Prescott filter in Julia. Recall that, given a timeseries $y_t$ and a smoothing parameter $\lambda$, the filtered trend $\tau_t$ is defined by:
-$$\min_{\tau}\left(\sum_{t = 1}^T {(y_t - \tau _t )^2 }  + \lambda \sum_{t = 2}^{T - 1} {[(\tau _{t+1}  - \tau _t) - (\tau _t  - \tau _{t - 1} )]^2 }\right)$$&lt;/p&gt;
-&lt;p&gt;The first-order conditions of this minimization problem can be expressed by the following linear system:
-$$\begin{pmatrix}
+&lt;p&gt;Here we show how to implement a Hodrick-Prescott filter in Julia. Recall that, given a timeseries &lt;span class="math"&gt;\(y_t\)&lt;/span&gt; and a smoothing parameter &lt;span class="math"&gt;\(\lambda\)&lt;/span&gt;, the filtered trend &lt;span class="math"&gt;\(\tau_t\)&lt;/span&gt; is defined by: &lt;span class="math"&gt;\[\min_{\tau}\left(\sum_{t = 1}^T {(y_t - \tau _t )^2 }  + \lambda \sum_{t = 2}^{T - 1} {[(\tau _{t+1}  - \tau _t) - (\tau _t  - \tau _{t - 1} )]^2 }\right)\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The first-order conditions of this minimization problem can be expressed by the following linear system: &lt;span class="math"&gt;\[\begin{pmatrix}
 1+\lambda &amp;amp; -2\lambda  &amp;amp; \lambda    &amp;amp;           &amp;amp;            &amp;amp;            &amp;amp;           \\
 -2\lambda &amp;amp; 1+5\lambda &amp;amp; -4\lambda  &amp;amp; \ddots    &amp;amp;            &amp;amp;            &amp;amp;           \\
 \lambda   &amp;amp; -4\lambda  &amp;amp; 1+6\lambda &amp;amp; \ddots    &amp;amp; \ddots     &amp;amp;            &amp;amp;           \\
@@ -77,7 +66,7 @@ y_t \\
 \vdots \\
 y_T
 \end{pmatrix}
-$$&lt;/p&gt;
+\]&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;The following function implements the Hodrick-Prescott filter by computing the filtered trend, given a timeseries and a smoothing parameter:&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -133,15 +122,7 @@ hp_filter (generic function with 1 method)
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;The &lt;code&gt;spdiagm&lt;/code&gt; function is used to create a matrix by specifying its nonzero diagonals. The right-divide operator (antislash) is used to compute the solution of the linear system.&lt;/p&gt;
-&lt;p&gt;Features to be noted:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Matrices can be easily constructed with brackets&lt;/li&gt;
-&lt;li&gt;Function arguments are typed: this is optional most of the time, but improves performance&lt;/li&gt;
-&lt;li&gt;The type &lt;code&gt;Float64&lt;/code&gt; represents double precision floating point numbers (they occupy 64 bits in memory). It is the default type when manipulating real numbers.&lt;/li&gt;
-&lt;li&gt;There is no output argument (it is the last computation that is returned as output)&lt;/li&gt;
-&lt;li&gt;The implicit multiplication operator in monomials (&lt;code&gt;2lambda&lt;/code&gt;)&lt;/li&gt;
-&lt;li&gt;One can construct tuples using a comma-separated list within parenthesis (see the 5-tuples as first and second argument of &lt;code&gt;spdiagm&lt;/code&gt;).&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;Features to be noted: * Matrices can be easily constructed with brackets * Function arguments are typed: this is optional most of the time, but improves performance * The type &lt;code&gt;Float64&lt;/code&gt; represents double precision floating point numbers (they occupy 64 bits in memory). It is the default type when manipulating real numbers. * There is no output argument (it is the last computation that is returned as output) * The implicit multiplication operator in monomials (&lt;code&gt;2lambda&lt;/code&gt;) * One can construct tuples using a comma-separated list within parenthesis (see the 5-tuples as first and second argument of &lt;code&gt;spdiagm&lt;/code&gt;).&lt;/p&gt;
 &lt;p&gt;Now we construct a timeseries as the simulation over 40 periods of a random walk with gaussian innovation:&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -268,7 +249,7 @@ In&amp;nbsp;[3]:
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Note that there is a dot at the end of &lt;code&gt;1600&lt;/code&gt;, in order to emphasize the fact that it is a floating point. If the dot is omitted, the number is interpreted as an integer, and this leads to an error. This is a consequence of the typing system of Julia, we&amp;#39;ll return to that later.&lt;/p&gt;
+&lt;p&gt;Note that there is a dot at the end of &lt;code&gt;1600&lt;/code&gt;, in order to emphasize the fact that it is a floating point. If the dot is omitted, the number is interpreted as an integer, and this leads to an error. This is a consequence of the typing system of Julia, we'll return to that later.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -307,7 +288,7 @@ while loading In[4], in expression starting on line 1&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Now we want to plot the result, using the &lt;code&gt;PyPlot&lt;/code&gt; module which is based on Python&amp;#39;s &lt;em&gt;matplotlib&lt;/em&gt;. Note that a module needs to be loaded only once per Julia session.&lt;/p&gt;
+&lt;p&gt;Now we want to plot the result, using the &lt;code&gt;PyPlot&lt;/code&gt; module which is based on Python's &lt;em&gt;matplotlib&lt;/em&gt;. Note that a module needs to be loaded only once per Julia session.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -347,7 +328,7 @@ INFO: Loading help data...
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Finally let&amp;#39;s do the plot:&lt;/p&gt;
+&lt;p&gt;Finally let's do the plot:&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -411,13 +392,10 @@ PyObject &amp;lt;matplotlib.text.Text object at 0xb7249d0&amp;gt;
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Suppose that we want to compute the yield-to-maturity (YTM) of a bond with pays a yearly coupon $C$. The principal is 100, which is due at date $T$ (expressed in years, today is date 0). The bond is priced today at $P$ (excluding accrued interest).&lt;/p&gt;
-&lt;p&gt;First consider the case when $T$ is an integer. For a given annual discount rate $\delta$, the net present value of the flow of payments is the following:
-$$NPV(\delta) = \frac{100}{(1+\delta)^T}+ \sum_{t=1}^{T} \frac{C}{(1+\delta)^t}$$&lt;/p&gt;
-&lt;p&gt;If $T$ is not an integer, and if $\lfloor T \rfloor$ is the biggest integer less than $T$, then the NPV is:
-$$NPV(\delta) = \frac{1}{(1+\delta)^{T-\lfloor T \rfloor}} \left( \frac{100}{(1+\delta)^{\lfloor T \rfloor}}+  \sum_{t=1}^{\lfloor T \rfloor} \frac{C}{(1+\delta)^t}\right)$$&lt;/p&gt;
-&lt;p&gt;The YTM is the value $\delta^*$ that equalizes the NPV with the bond price (including accrued interests), &lt;em&gt;i.e.&lt;/em&gt; such that:
-$$P + (1-T+\lfloor T \rfloor)C = NPV(\delta^*)$$&lt;/p&gt;
+&lt;p&gt;Suppose that we want to compute the yield-to-maturity (YTM) of a bond with pays a yearly coupon &lt;span class="math"&gt;\(C\)&lt;/span&gt;. The principal is 100, which is due at date &lt;span class="math"&gt;\(T\)&lt;/span&gt; (expressed in years, today is date 0). The bond is priced today at &lt;span class="math"&gt;\(P\)&lt;/span&gt; (excluding accrued interest).&lt;/p&gt;
+&lt;p&gt;First consider the case when &lt;span class="math"&gt;\(T\)&lt;/span&gt; is an integer. For a given annual discount rate &lt;span class="math"&gt;\(\delta\)&lt;/span&gt;, the net present value of the flow of payments is the following: &lt;span class="math"&gt;\[NPV(\delta) = \frac{100}{(1+\delta)^T}+ \sum_{t=1}^{T} \frac{C}{(1+\delta)^t}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;If &lt;span class="math"&gt;\(T\)&lt;/span&gt; is not an integer, and if &lt;span class="math"&gt;\(\lfloor T \rfloor\)&lt;/span&gt; is the biggest integer less than &lt;span class="math"&gt;\(T\)&lt;/span&gt;, then the NPV is: &lt;span class="math"&gt;\[NPV(\delta) = \frac{1}{(1+\delta)^{T-\lfloor T \rfloor}} \left( \frac{100}{(1+\delta)^{\lfloor T \rfloor}}+  \sum_{t=1}^{\lfloor T \rfloor} \frac{C}{(1+\delta)^t}\right)\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The YTM is the value &lt;span class="math"&gt;\(\delta^*\)&lt;/span&gt; that equalizes the NPV with the bond price (including accrued interests), &lt;em&gt;i.e.&lt;/em&gt; such that: &lt;span class="math"&gt;\[P + (1-T+\lfloor T \rfloor)C = NPV(\delta^*)\]&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;We now implement this computation in Julia. First, we load two packages that we will need for our purpose. The first is &lt;code&gt;DateTime&lt;/code&gt;, useful for time computations, and the second is &lt;code&gt;Roots&lt;/code&gt;, which provides a nonlinear zero finder for univariate functions via the &lt;code&gt;fzero&lt;/code&gt; function.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -505,14 +483,7 @@ ytm (generic function with 1 method)
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;The nested function &lt;code&gt;npv_minus_price&lt;/code&gt; computes the difference between the NPV for a given yield, and the market price including accrued interest. Then the &lt;code&gt;fzero&lt;/code&gt; function computes a zero of the &lt;code&gt;npv_minus_price&lt;/code&gt; function, which is the YTM. The zero solver needs an initial value for starting the algorithm, and we use the coupon rate for that purpose.&lt;/p&gt;
-&lt;p&gt;Features to be noted:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Functions can be nested. Inside functions inherit from variables of the enclosing function&lt;/li&gt;
-&lt;li&gt;The &lt;code&gt;while&lt;/code&gt;/&lt;code&gt;end&lt;/code&gt; control structure, similar to MATLAB&amp;#39;s&lt;/li&gt;
-&lt;li&gt;Updating arithmetic operators (&lt;code&gt;-=&lt;/code&gt;, &lt;code&gt;/=&lt;/code&gt;), which do both a computation and a variable assignment (&lt;em&gt;e.g.&lt;/em&gt; &lt;code&gt;x /= 2&lt;/code&gt; is equivalent to &lt;code&gt;x = x/2&lt;/code&gt;)&lt;/li&gt;
-&lt;li&gt;Type converters: &lt;code&gt;year()&lt;/code&gt;, &lt;code&gt;integer()&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Fields of a structure can be accessed with a dot syntax, as in MATLAB (&lt;em&gt;e.g.&lt;/em&gt; &lt;code&gt;r.zero&lt;/code&gt;)&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;Features to be noted: * Functions can be nested. Inside functions inherit from variables of the enclosing function * The &lt;code&gt;while&lt;/code&gt;/&lt;code&gt;end&lt;/code&gt; control structure, similar to MATLAB's * Updating arithmetic operators (&lt;code&gt;-=&lt;/code&gt;, &lt;code&gt;/=&lt;/code&gt;), which do both a computation and a variable assignment (&lt;em&gt;e.g.&lt;/em&gt; &lt;code&gt;x /= 2&lt;/code&gt; is equivalent to &lt;code&gt;x = x/2&lt;/code&gt;) * Type converters: &lt;code&gt;year()&lt;/code&gt;, &lt;code&gt;integer()&lt;/code&gt; * Fields of a structure can be accessed with a dot syntax, as in MATLAB (&lt;em&gt;e.g.&lt;/em&gt; &lt;code&gt;r.zero&lt;/code&gt;)&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -670,7 +641,7 @@ Int64
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;The default floating point type is 64-bit (equivalent of Fortran&amp;#39;s &lt;code&gt;double precision&lt;/code&gt; or C&amp;#39;s &lt;code&gt;double&lt;/code&gt;):&lt;/p&gt;
+&lt;p&gt;The default floating point type is 64-bit (equivalent of Fortran's &lt;code&gt;double precision&lt;/code&gt; or C's &lt;code&gt;double&lt;/code&gt;):&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -1711,13 +1682,7 @@ In&amp;nbsp;[34]:
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Type annotations can be used at different places:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;in the declaration of composite types (see above)&lt;/li&gt;
-&lt;li&gt;for qualifying function arguments (see above)&lt;/li&gt;
-&lt;li&gt;to assert that something is of a given type&lt;/li&gt;
-&lt;li&gt;to indicate the type of a variable (only local variables in functions, not for global variables)&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;Type annotations can be used at different places: 1. in the declaration of composite types (see above) 2. for qualifying function arguments (see above) 3. to assert that something is of a given type 4. to indicate the type of a variable (only local variables in functions, not for global variables)&lt;/p&gt;
 &lt;p&gt;Note that type annotations are always optional (except for function arguments when doing multiple dispatch, see below). Type annotations can increase performance when used judiciously, see below.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -1900,12 +1865,7 @@ In&amp;nbsp;[38]:
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Functions can be constructed using three syntaxes:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;with the &lt;code&gt;function&lt;/code&gt; keyword&lt;/li&gt;
-&lt;li&gt;using a compact “assignement form” when the function body is simple&lt;/li&gt;
-&lt;li&gt;as anonymous function (&lt;em&gt;i.e.&lt;/em&gt; not associated to a function name), with the arrow syntax (&lt;code&gt;-&amp;gt;&lt;/code&gt;)&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;Functions can be constructed using three syntaxes: * with the &lt;code&gt;function&lt;/code&gt; keyword * using a compact “assignement form” when the function body is simple * as anonymous function (&lt;em&gt;i.e.&lt;/em&gt; not associated to a function name), with the arrow syntax (&lt;code&gt;-&amp;gt;&lt;/code&gt;)&lt;/p&gt;
 &lt;p&gt;Here is an example of compact function declaration:&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2382,14 +2342,9 @@ Timeseries(2014-06-21,12,[5.0,8.0,12.0])
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;For solving the model, we will need to integrate expectations with respect to Gaussian shocks. We will therefore use the Gauss-Hermite quadrature, which is well-suited to that case. The quadrature consists in approximating an integral by a finite weighted sum. More precisely, the Gauss-Hermite quadrature is:
-$$\int_{-\infty}^{+\infty} f(x)e^{-x^2} dx \approx \sum_{i=1}^{n} w_i f(x_i)$$
-where $n$ determines the precision of the approximation (the higher $n$, the more precise), the $x_i$ are the roots of the $n$-th order Hermite polynomial $H_n(x)$, and the associated weights are:
-$$w_i = \frac{2^{n-1} n! \sqrt{\pi}}{n^2 [H_{n-1}(x_i)]^2}$$&lt;/p&gt;
-&lt;p&gt;In turn, the Hermite polynomials are defined by the following recursive equations (where $H'$ denotes the derivative of $H$):
-$$H_0(x) = 1$$
-$$H_n(x) = 2xH_{n-1}(x) - H'_{n-1}(x)$$&lt;/p&gt;
-&lt;p&gt;We are now going to implement the computation of the points and weights as a function of $n$. For that purpose, we will use the &lt;code&gt;Polynomial&lt;/code&gt; package, whose documentation can be seen &lt;a href="https://github.com/vtjnash/Polynomial.jl/blob/master/README.md"&gt;there&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For solving the model, we will need to integrate expectations with respect to Gaussian shocks. We will therefore use the Gauss-Hermite quadrature, which is well-suited to that case. The quadrature consists in approximating an integral by a finite weighted sum. More precisely, the Gauss-Hermite quadrature is: &lt;span class="math"&gt;\[\int_{-\infty}^{+\infty} f(x)e^{-x^2} dx \approx \sum_{i=1}^{n} w_i f(x_i)\]&lt;/span&gt; where &lt;span class="math"&gt;\(n\)&lt;/span&gt; determines the precision of the approximation (the higher &lt;span class="math"&gt;\(n\)&lt;/span&gt;, the more precise), the &lt;span class="math"&gt;\(x_i\)&lt;/span&gt; are the roots of the &lt;span class="math"&gt;\(n\)&lt;/span&gt;-th order Hermite polynomial &lt;span class="math"&gt;\(H_n(x)\)&lt;/span&gt;, and the associated weights are: &lt;span class="math"&gt;\[w_i = \frac{2^{n-1} n! \sqrt{\pi}}{n^2 [H_{n-1}(x_i)]^2}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;In turn, the Hermite polynomials are defined by the following recursive equations (where &lt;span class="math"&gt;\(H&amp;#39;\)&lt;/span&gt; denotes the derivative of &lt;span class="math"&gt;\(H\)&lt;/span&gt;): &lt;span class="math"&gt;\[H_0(x) = 1\]&lt;/span&gt; &lt;span class="math"&gt;\[H_n(x) = 2xH_{n-1}(x) - H&amp;#39;_{n-1}(x)\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;We are now going to implement the computation of the points and weights as a function of &lt;span class="math"&gt;\(n\)&lt;/span&gt;. For that purpose, we will use the &lt;code&gt;Polynomial&lt;/code&gt; package, whose documentation can be seen &lt;a href="https://github.com/vtjnash/Polynomial.jl/blob/master/README.md"&gt;there&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;First, load the package.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2414,7 +2369,7 @@ In&amp;nbsp;[48]:
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Now, write a function that, given $n$, creates $H_n$. You will need the &lt;code&gt;Poly&lt;/code&gt; function to create basic polynomials, the &lt;code&gt;polyder&lt;/code&gt; function to compute the derivative of a polynomial. Standard addition and multiplication work on polynomials as expected. Use a &lt;code&gt;for&lt;/code&gt; loop to do the recursion.&lt;/p&gt;
+&lt;p&gt;Now, write a function that, given &lt;span class="math"&gt;\(n\)&lt;/span&gt;, creates &lt;span class="math"&gt;\(H_n\)&lt;/span&gt;. You will need the &lt;code&gt;Poly&lt;/code&gt; function to create basic polynomials, the &lt;code&gt;polyder&lt;/code&gt; function to compute the derivative of a polynomial. Standard addition and multiplication work on polynomials as expected. Use a &lt;code&gt;for&lt;/code&gt; loop to do the recursion.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2464,7 +2419,7 @@ compute_hermite_polynomial (generic function with 1 method)
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Verify that $H_5(x) = 32x^5-160x^3+120x$:&lt;/p&gt;
+&lt;p&gt;Verify that &lt;span class="math"&gt;\(H_5(x) = 32x^5-160x^3+120x\)&lt;/span&gt;:&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2507,7 +2462,7 @@ Poly(32x^5 - 160x^3 + 120x)
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Now, write a function that, given $n$, returns a tuple consisting of the two vectors $x_i$ and $w_i$. Use the &lt;code&gt;roots&lt;/code&gt; function to compute the roots of a polynomial, the &lt;code&gt;polyval&lt;/code&gt; function to evaluate a polynomial, and the &lt;code&gt;factorial&lt;/code&gt; function. You can use a comprehension to create the vector of weights. Also, you can use a type annotation to indicate to Julia that the roots of the polynomial are real, and not complex.&lt;/p&gt;
+&lt;p&gt;Now, write a function that, given &lt;span class="math"&gt;\(n\)&lt;/span&gt;, returns a tuple consisting of the two vectors &lt;span class="math"&gt;\(x_i\)&lt;/span&gt; and &lt;span class="math"&gt;\(w_i\)&lt;/span&gt;. Use the &lt;code&gt;roots&lt;/code&gt; function to compute the roots of a polynomial, the &lt;code&gt;polyval&lt;/code&gt; function to evaluate a polynomial, and the &lt;code&gt;factorial&lt;/code&gt; function. You can use a comprehension to create the vector of weights. Also, you can use a type annotation to indicate to Julia that the roots of the polynomial are real, and not complex.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2559,7 +2514,7 @@ compute_hermite_points (generic function with 1 method)
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Now, verify that, for $n=3$, one has: $(x_1,w_1) \approx (-1.22,0.29)$, $(x_2,w_2) \approx (0,1.18)$, $(x_3,w_3) \approx (1.22,0.29)$:&lt;/p&gt;
+&lt;p&gt;Now, verify that, for &lt;span class="math"&gt;\(n=3\)&lt;/span&gt;, one has: &lt;span class="math"&gt;\((x_1,w_1) \approx (-1.22,0.29)\)&lt;/span&gt;, &lt;span class="math"&gt;\((x_2,w_2) \approx (0,1.18)\)&lt;/span&gt;, &lt;span class="math"&gt;\((x_3,w_3) \approx (1.22,0.29)\)&lt;/span&gt;:&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2615,24 +2570,14 @@ In&amp;nbsp;[52]:
 &lt;p&gt;We consider a country with a representative agent, producing and consuming a single homogeneous good. The production stream is exogenous and has a stochastic growth trend.&lt;/p&gt;
 &lt;p&gt;At every period, the difference between production and consumption is financed on international markets. The country therefore accumulates debt (or assets) which is short-term (one period), and can decide to default or repay at every period. If it repays, access to financial markets continues. If it defaults, it is barred from financial markets (and therefore, being in autarky, has to consume what it produces), and moreover suffers from a penalty (proportional to GDP); exclusion from financial markets can last several periods, and terminates with a given probability at each period.&lt;/p&gt;
 &lt;p&gt;International investors are risk-neutral and in perfect competition. The interest rate that the country faces is therefore equal to the international riskless rate (assumed to be constant), plus a risk premium equal to the model-consistent risk of default in next period.&lt;/p&gt;
-&lt;p&gt;Let&amp;#39;s now describe the model equations. Since the model has a stochastic trend, equations and variables are in detrended form. The two state variables are $y_t$ the (log of the gross) growth rate and $a_t$ the detrended assets due at date $t$.&lt;/p&gt;
-&lt;p&gt;The law of motion of $y_t$ is:
-$$y_t = (1-\rho_g)\mu_y +\rho_g y_{t-1} + \varepsilon_t$$
-where $\varepsilon_t \leadsto \mathcal{N}(0, \sigma_g)$ and $\mu_y = ln(\mu_g) - \frac{\sigma_g^2}{2(1-\rho_g^2)}$.&lt;/p&gt;
-&lt;p&gt;Detrended GDP as a function of $y_t$ is:
-$$Q_t = \frac{e^{y_t}}{\mu_g}$$&lt;/p&gt;
-&lt;p&gt;We now describe the value function of the country. The instantaneous utility function is:
-$$u(c) = \frac{c^{1-\gamma}}{1-\gamma}$$
-and the discount factor is $\beta$.&lt;/p&gt;
-&lt;p&gt;$V^G(a_t, y_t)$ is the value function if the country repays, $V^B(y_t)$ is the value function under autarky (after a default), and $V(a_t,y_t)$ is the optimal choice between repayment and default, which is given by:
-$$V(a_t,y_t) = \max\{ V^G(a_t,y_t), V^B(y_t) \}$$&lt;/p&gt;
-&lt;p&gt;The value function under autarky depends on $\delta$ (the penalty) and $\lambda$ (the probability of redemption):
-$$V^B(y_t) = u\left[(1-\delta)Q_t\right] + \beta e^{y_t(1-\gamma)}\left[\lambda \mathbb{E}_t V^G(0, y_{t+1}) + (1-\lambda) \mathbb{E}_t V^B(y_{t+1})\right]$$&lt;/p&gt;
-&lt;p&gt;The value function under repayment depends of $q(y_t, a_{t+1})$ which is the price at which investors accept to buy bonds due tomorrow:
-$$V^G(a_t, y_t) = \max_{a_{t+1}} \left\{u\left[Q_t + a_t - a_{t+1} q(y_t, a_{t+1}) e^{y_t}\right] + \beta e^{y_t(1-\gamma)} \mathbb{E}_t V(a_{t+1}, y_{t+1})\right\}$$&lt;/p&gt;
-&lt;p&gt;Finally, the price function of bonds is:
-$$q(y_t, a_{t+1}) = \frac{\mathbb{P}(y_{t+1} \geq y^*(a_{t+1}) | y_t)}{1+r}$$
-where $r$ is the riskless interest rate, and $y^*(a_{t+1})$ is the default threshold defined by $V^G(a_{t+1}, y^*(a_{t+1})) = V^B(y^*(a_{t+1}))$.&lt;/p&gt;
+&lt;p&gt;Let's now describe the model equations. Since the model has a stochastic trend, equations and variables are in detrended form. The two state variables are &lt;span class="math"&gt;\(y_t\)&lt;/span&gt; the (log of the gross) growth rate and &lt;span class="math"&gt;\(a_t\)&lt;/span&gt; the detrended assets due at date &lt;span class="math"&gt;\(t\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;The law of motion of &lt;span class="math"&gt;\(y_t\)&lt;/span&gt; is: &lt;span class="math"&gt;\[y_t = (1-\rho_g)\mu_y +\rho_g y_{t-1} + \varepsilon_t\]&lt;/span&gt; where &lt;span class="math"&gt;\(\varepsilon_t \leadsto \mathcal{N}(0, \sigma_g)\)&lt;/span&gt; and &lt;span class="math"&gt;\(\mu_y = ln(\mu_g) - \frac{\sigma_g^2}{2(1-\rho_g^2)}\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Detrended GDP as a function of &lt;span class="math"&gt;\(y_t\)&lt;/span&gt; is: &lt;span class="math"&gt;\[Q_t = \frac{e^{y_t}}{\mu_g}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;We now describe the value function of the country. The instantaneous utility function is: &lt;span class="math"&gt;\[u(c) = \frac{c^{1-\gamma}}{1-\gamma}\]&lt;/span&gt; and the discount factor is &lt;span class="math"&gt;\(\beta\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;span class="math"&gt;\(V^G(a_t, y_t)\)&lt;/span&gt; is the value function if the country repays, &lt;span class="math"&gt;\(V^B(y_t)\)&lt;/span&gt; is the value function under autarky (after a default), and &lt;span class="math"&gt;\(V(a_t,y_t)\)&lt;/span&gt; is the optimal choice between repayment and default, which is given by: &lt;span class="math"&gt;\[V(a_t,y_t) = \max\{ V^G(a_t,y_t), V^B(y_t) \}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The value function under autarky depends on &lt;span class="math"&gt;\(\delta\)&lt;/span&gt; (the penalty) and &lt;span class="math"&gt;\(\lambda\)&lt;/span&gt; (the probability of redemption): &lt;span class="math"&gt;\[V^B(y_t) = u\left[(1-\delta)Q_t\right] + \beta e^{y_t(1-\gamma)}\left[\lambda \mathbb{E}_t V^G(0, y_{t+1}) + (1-\lambda) \mathbb{E}_t V^B(y_{t+1})\right]\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The value function under repayment depends of &lt;span class="math"&gt;\(q(y_t, a_{t+1})\)&lt;/span&gt; which is the price at which investors accept to buy bonds due tomorrow: &lt;span class="math"&gt;\[V^G(a_t, y_t) = \max_{a_{t+1}} \left\{u\left[Q_t + a_t - a_{t+1} q(y_t, a_{t+1}) e^{y_t}\right] + \beta e^{y_t(1-\gamma)} \mathbb{E}_t V(a_{t+1}, y_{t+1})\right\}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Finally, the price function of bonds is: &lt;span class="math"&gt;\[q(y_t, a_{t+1}) = \frac{\mathbb{P}(y_{t+1} \geq y^*(a_{t+1}) | y_t)}{1+r}\]&lt;/span&gt; where &lt;span class="math"&gt;\(r\)&lt;/span&gt; is the riskless interest rate, and &lt;span class="math"&gt;\(y^*(a_{t+1})\)&lt;/span&gt; is the default threshold defined by &lt;span class="math"&gt;\(V^G(a_{t+1}, y^*(a_{t+1})) = V^B(y^*(a_{t+1}))\)&lt;/span&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2651,8 +2596,8 @@ where $r$ is the riskless interest rate, and $y^*(a_{t+1})$ is the default thres
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;We are going to use the following (quarterly) calibration: $\gamma = 2$, $r = 0.01$, $\beta=0.8$, $\lambda=0.1$, $\delta=0.02$, $\mu_g = 1.006$, $\sigma_g = 0.03$, $\rho_g = 0.17$.&lt;/p&gt;
-&lt;p&gt;Assign each parameter to a constant variable of the same. Also create a variable for $\mu_y$, using the relationship shown above.&lt;/p&gt;
+&lt;p&gt;We are going to use the following (quarterly) calibration: &lt;span class="math"&gt;\(\gamma = 2\)&lt;/span&gt;, &lt;span class="math"&gt;\(r = 0.01\)&lt;/span&gt;, &lt;span class="math"&gt;\(\beta=0.8\)&lt;/span&gt;, &lt;span class="math"&gt;\(\lambda=0.1\)&lt;/span&gt;, &lt;span class="math"&gt;\(\delta=0.02\)&lt;/span&gt;, &lt;span class="math"&gt;\(\mu_g = 1.006\)&lt;/span&gt;, &lt;span class="math"&gt;\(\sigma_g = 0.03\)&lt;/span&gt;, &lt;span class="math"&gt;\(\rho_g = 0.17\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Assign each parameter to a constant variable of the same. Also create a variable for &lt;span class="math"&gt;\(\mu_y\)&lt;/span&gt;, using the relationship shown above.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2713,7 +2658,7 @@ In&amp;nbsp;[53]:
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Using the short form syntax, create functions for computing the instantaneous utility (as a function of consumption) and GDP (as a function of $y_t$):&lt;/p&gt;
+&lt;p&gt;Using the short form syntax, create functions for computing the instantaneous utility (as a function of consumption) and GDP (as a function of &lt;span class="math"&gt;\(y_t\)&lt;/span&gt;):&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2800,7 +2745,7 @@ gdp (generic function with 1 method)
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;As explained above, the two state variables are $y_t$ and $a_t$. Since we are going to interpolate with cubic splines, we have to decide of a grid on which to make the approximation. We will use the interval $[-0.3,0]$ for $a_t$, with 15 points. And the interval $\left[\mu_y-\frac{6\sigma_g}{\sqrt{1-\rho_g^2}}, \mu_y+\frac{6\sigma_g}{\sqrt{1-\rho_g^2}}\right]$ for $y_t$, with 10 points.&lt;/p&gt;
+&lt;p&gt;As explained above, the two state variables are &lt;span class="math"&gt;\(y_t\)&lt;/span&gt; and &lt;span class="math"&gt;\(a_t\)&lt;/span&gt;. Since we are going to interpolate with cubic splines, we have to decide of a grid on which to make the approximation. We will use the interval &lt;span class="math"&gt;\([-0.3,0]\)&lt;/span&gt; for &lt;span class="math"&gt;\(a_t\)&lt;/span&gt;, with 15 points. And the interval &lt;span class="math"&gt;\(\left[\mu_y-\frac{6\sigma_g}{\sqrt{1-\rho_g^2}}, \mu_y+\frac{6\sigma_g}{\sqrt{1-\rho_g^2}}\right]\)&lt;/span&gt; for &lt;span class="math"&gt;\(y_t\)&lt;/span&gt;, with 10 points.&lt;/p&gt;
 &lt;p&gt;Create variables &lt;code&gt;min_a&lt;/code&gt;, &lt;code&gt;max_a&lt;/code&gt;, &lt;code&gt;ngrid_a&lt;/code&gt; and &lt;code&gt;min_y&lt;/code&gt;, &lt;code&gt;max_y&lt;/code&gt;, &lt;code&gt;ngrid_y&lt;/code&gt;. Then create vectors &lt;code&gt;grid_a&lt;/code&gt; and &lt;code&gt;grid_y&lt;/code&gt;, using the &lt;code&gt;linspace&lt;/code&gt; function.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2863,7 +2808,7 @@ In&amp;nbsp;[56]:
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Now, let&amp;#39;s give initial values for $V^G$ and $V^B$ on the grid points. We will use $V^B(y_t) = u((1-\delta)Q_t)$ and $V^G(a_t, y_t) = u(Q_t + a_t)$.&lt;/p&gt;
+&lt;p&gt;Now, let's give initial values for &lt;span class="math"&gt;\(V^G\)&lt;/span&gt; and &lt;span class="math"&gt;\(V^B\)&lt;/span&gt; on the grid points. We will use &lt;span class="math"&gt;\(V^B(y_t) = u((1-\delta)Q_t)\)&lt;/span&gt; and &lt;span class="math"&gt;\(V^G(a_t, y_t) = u(Q_t + a_t)\)&lt;/span&gt;.&lt;/p&gt;
 &lt;p&gt;Create a vector &lt;code&gt;VB_points&lt;/code&gt; and a matrix &lt;code&gt;VG_points&lt;/code&gt; initialized with these values. For &lt;code&gt;VB_points&lt;/code&gt;, you can use a comprehension. Declare both variables as constant; note that this means that the variable will always point to the same array, but this does not prevent modification of array elements.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2928,7 +2873,7 @@ In&amp;nbsp;[58]:
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;The following example shows how to approximate the absolute function by a 5-points spline over $[-1, 1]$. For 2-dimensional approximation, the principle is the same: arguments to &lt;code&gt;filter_coeffs&lt;/code&gt; and &lt;code&gt;eval_UC_spline&lt;/code&gt; should be vectors of 2 elements (or matrices for the point values or the coefficients).&lt;/p&gt;
+&lt;p&gt;The following example shows how to approximate the absolute function by a 5-points spline over &lt;span class="math"&gt;\([-1, 1]\)&lt;/span&gt;. For 2-dimensional approximation, the principle is the same: arguments to &lt;code&gt;filter_coeffs&lt;/code&gt; and &lt;code&gt;eval_UC_spline&lt;/code&gt; should be vectors of 2 elements (or matrices for the point values or the coefficients).&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -3053,7 +2998,7 @@ In&amp;nbsp;[60]:
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Write functions &lt;code&gt;VG(a, y)&lt;/code&gt; and &lt;code&gt;VB(y)&lt;/code&gt; that evaluate the spline at any point in the state space. &lt;em&gt;Warning&lt;/em&gt;: for &lt;code&gt;VG&lt;/code&gt;, the last argument in the call to &lt;code&gt;eval_UC_spline&lt;/code&gt; must be &lt;code&gt;[a, y]&amp;#39;&lt;/code&gt; (note the transpose, needed to create a $1\times 2$ matrix).&lt;/p&gt;
+&lt;p&gt;Write functions &lt;code&gt;VG(a, y)&lt;/code&gt; and &lt;code&gt;VB(y)&lt;/code&gt; that evaluate the spline at any point in the state space. &lt;em&gt;Warning&lt;/em&gt;: for &lt;code&gt;VG&lt;/code&gt;, the last argument in the call to &lt;code&gt;eval_UC_spline&lt;/code&gt; must be &lt;code&gt;[a, y]'&lt;/code&gt; (note the transpose, needed to create a &lt;span class="math"&gt;\(1\times 2\)&lt;/span&gt; matrix).&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -3260,7 +3205,7 @@ V (generic function with 1 method)
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;First, here is an example of the probability that a variable following $\mathcal{N}(\mu_y, \sigma_g)$ is less than $2\mu_y$, using the &lt;code&gt;Distributions&lt;/code&gt; package:&lt;/p&gt;
+&lt;p&gt;First, here is an example of the probability that a variable following &lt;span class="math"&gt;\(\mathcal{N}(\mu_y, \sigma_g)\)&lt;/span&gt; is less than &lt;span class="math"&gt;\(2\mu_y\)&lt;/span&gt;, using the &lt;code&gt;Distributions&lt;/code&gt; package:&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -3305,13 +3250,8 @@ In&amp;nbsp;[66]:
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Now write the bond price function &lt;code&gt;q(y, a1)&lt;/code&gt; (where &lt;code&gt;a1&lt;/code&gt; denotes $a_{t+1}$). The idea is to compute tomorrow&amp;#39;s default threshold $y^*$ (using &lt;code&gt;fzero&lt;/code&gt; on the difference between &lt;code&gt;VG&lt;/code&gt; and &lt;code&gt;VB&lt;/code&gt;), and then to compute the corresponding default probability with the &lt;code&gt;cdf&lt;/code&gt; and &lt;code&gt;Normal&lt;/code&gt; functions.&lt;/p&gt;
-&lt;p&gt;In order to speed up the computation, you can treat special cases separately:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;if the assets are positive, the risk premium is zero&lt;/li&gt;
-&lt;li&gt;if for a large value of $y_{t+1}$ (like 6 standard deviations above the mean), default is still preferable to repayment, then the bond price is approximatively zero&lt;/li&gt;
-&lt;li&gt;if for a small value of $y_{t+1}$ (like 6 standard deviations below the mean), repayment is still preferable to default, then the risk premium is approximatively zero&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;Now write the bond price function &lt;code&gt;q(y, a1)&lt;/code&gt; (where &lt;code&gt;a1&lt;/code&gt; denotes &lt;span class="math"&gt;\(a_{t+1}\)&lt;/span&gt;). The idea is to compute tomorrow's default threshold &lt;span class="math"&gt;\(y^*\)&lt;/span&gt; (using &lt;code&gt;fzero&lt;/code&gt; on the difference between &lt;code&gt;VG&lt;/code&gt; and &lt;code&gt;VB&lt;/code&gt;), and then to compute the corresponding default probability with the &lt;code&gt;cdf&lt;/code&gt; and &lt;code&gt;Normal&lt;/code&gt; functions.&lt;/p&gt;
+&lt;p&gt;In order to speed up the computation, you can treat special cases separately: * if the assets are positive, the risk premium is zero * if for a large value of &lt;span class="math"&gt;\(y_{t+1}\)&lt;/span&gt; (like 6 standard deviations above the mean), default is still preferable to repayment, then the bond price is approximatively zero * if for a small value of &lt;span class="math"&gt;\(y_{t+1}\)&lt;/span&gt; (like 6 standard deviations below the mean), repayment is still preferable to default, then the risk premium is approximatively zero&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -3430,10 +3370,8 @@ In&amp;nbsp;[68]:
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Now, if $x_i$ and $w_i$ are the hermite points, and given that $\varepsilon_t \leadsto \mathcal{N}(0, \sigma_g)$, the following approximation holds (using the change of variable $y = \sigma_g\sqrt{2}x$):
-$$\mathbb{E}_t f(\varepsilon_{t+1}) = \int_{-\infty}^{+\infty} \frac{1}{\sigma_g\sqrt{2\pi}}f(y)e^{-\frac{y^2}{2\sigma_g^2}}dy = \int_{-\infty}^{+\infty} \frac{1}{\sqrt{\pi}} f(\sigma_g\sqrt{2}x)e^{-x^2}dx \approx \sum_{i=1}^n \frac{w_i}{\sqrt{\pi}} f(\sigma_g\sqrt{2} x_i) = \sum_{i=1}^n w'_i f(x'_i)$$
-where $w'_i=\frac{w_i}{\sqrt{\pi}}$ and $x'_i=\sigma_g\sqrt{2} x_i$.&lt;/p&gt;
-&lt;p&gt;Compute the vector of $x'_i$ and $w'_i$.&lt;/p&gt;
+&lt;p&gt;Now, if &lt;span class="math"&gt;\(x_i\)&lt;/span&gt; and &lt;span class="math"&gt;\(w_i\)&lt;/span&gt; are the hermite points, and given that &lt;span class="math"&gt;\(\varepsilon_t \leadsto \mathcal{N}(0, \sigma_g)\)&lt;/span&gt;, the following approximation holds (using the change of variable &lt;span class="math"&gt;\(y = \sigma_g\sqrt{2}x\)&lt;/span&gt;): &lt;span class="math"&gt;\[\mathbb{E}_t f(\varepsilon_{t+1}) = \int_{-\infty}^{+\infty} \frac{1}{\sigma_g\sqrt{2\pi}}f(y)e^{-\frac{y^2}{2\sigma_g^2}}dy = \int_{-\infty}^{+\infty} \frac{1}{\sqrt{\pi}} f(\sigma_g\sqrt{2}x)e^{-x^2}dx \approx \sum_{i=1}^n \frac{w_i}{\sqrt{\pi}} f(\sigma_g\sqrt{2} x_i) = \sum_{i=1}^n w&amp;#39;_i f(x&amp;#39;_i)\]&lt;/span&gt; where &lt;span class="math"&gt;\(w&amp;#39;_i=\frac{w_i}{\sqrt{\pi}}\)&lt;/span&gt; and &lt;span class="math"&gt;\(x&amp;#39;_i=\sigma_g\sqrt{2} x_i\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Compute the vector of &lt;span class="math"&gt;\(x&amp;#39;_i\)&lt;/span&gt; and &lt;span class="math"&gt;\(w&amp;#39;_i\)&lt;/span&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -3493,7 +3431,7 @@ In&amp;nbsp;[69]:
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Write the function &lt;code&gt;VB_next(y)&lt;/code&gt; that, given $y_t$, computes $u\left[(1-\delta)Q_t\right] + \beta e^{y_t(1-\gamma)}\left[\lambda \mathbb{E}_t V^G(0, y_{t+1}) + (1-\lambda) \mathbb{E}_t V^B(y_{t+1})\right]$ (the right hand side in the Bellman equation defining $V^B$).&lt;/p&gt;
+&lt;p&gt;Write the function &lt;code&gt;VB_next(y)&lt;/code&gt; that, given &lt;span class="math"&gt;\(y_t\)&lt;/span&gt;, computes &lt;span class="math"&gt;\(u\left[(1-\delta)Q_t\right] + \beta e^{y_t(1-\gamma)}\left[\lambda \mathbb{E}_t V^G(0, y_{t+1}) + (1-\lambda) \mathbb{E}_t V^B(y_{t+1})\right]\)&lt;/span&gt; (the right hand side in the Bellman equation defining &lt;span class="math"&gt;\(V^B\)&lt;/span&gt;).&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -3545,7 +3483,7 @@ VB_next (generic function with 1 method)
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Write &lt;code&gt;VG_objective(a1, a, y)&lt;/code&gt; which, given $a_{t+1}$, $a_t$ and $y_t$, computes $u\left[Q_t + a_t - a_{t+1} q(y_t, a_{t+1}) e^{y_t}\right] + \beta e^{y_t(1-\gamma)} \mathbb{E}_t V(a_{t+1}, y_{t+1})$ (the maximization objective in the right hand side of the Bellman equation defining $V^G$).&lt;/p&gt;
+&lt;p&gt;Write &lt;code&gt;VG_objective(a1, a, y)&lt;/code&gt; which, given &lt;span class="math"&gt;\(a_{t+1}\)&lt;/span&gt;, &lt;span class="math"&gt;\(a_t\)&lt;/span&gt; and &lt;span class="math"&gt;\(y_t\)&lt;/span&gt;, computes &lt;span class="math"&gt;\(u\left[Q_t + a_t - a_{t+1} q(y_t, a_{t+1}) e^{y_t}\right] + \beta e^{y_t(1-\gamma)} \mathbb{E}_t V(a_{t+1}, y_{t+1})\)&lt;/span&gt; (the maximization objective in the right hand side of the Bellman equation defining &lt;span class="math"&gt;\(V^G\)&lt;/span&gt;).&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -3674,8 +3612,8 @@ In&amp;nbsp;[73]:
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Create constant variables to store the maximum number of iterations (set to 1000), and the convergence criterion expressed as a tolerance (set to $10^{-6}$).&lt;/p&gt;
-&lt;p&gt;Then create an iteration counter (initialized to 1), and a variable to store the current error (initialized to $+\infty$).&lt;/p&gt;
+&lt;p&gt;Create constant variables to store the maximum number of iterations (set to 1000), and the convergence criterion expressed as a tolerance (set to &lt;span class="math"&gt;\(10^{-6}\)&lt;/span&gt;).&lt;/p&gt;
+&lt;p&gt;Then create an iteration counter (initialized to 1), and a variable to store the current error (initialized to &lt;span class="math"&gt;\(+\infty\)&lt;/span&gt;).&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -3776,20 +3714,7 @@ In&amp;nbsp;[75]:
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Now create the main computational loop:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;use a &lt;code&gt;while&lt;/code&gt; construct, which will iterate as long as the error is greater than the tolerance, and the iteration counter less than the maximum iterations&lt;/li&gt;
-&lt;li&gt;in an embedded loop over the $y_t$ grid:&lt;ul&gt;
-&lt;li&gt;compute the value of $V^B$ at next iteration using &lt;code&gt;VB_next&lt;/code&gt;, and store it in &lt;code&gt;VB_points_next&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;in an embedded loop over the $a_t$ grid, optimize &lt;code&gt;VG_objective&lt;/code&gt; over $a_{t+1}$, and store the result in &lt;code&gt;VG_points_next&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;update the error, which is the max of the (infinite norm) distance between &lt;code&gt;VG_points&lt;/code&gt; and &lt;code&gt;VG_points_next&lt;/code&gt; on one hand, and &lt;code&gt;VB_points&lt;/code&gt; and &lt;code&gt;VB_points_next&lt;/code&gt; on the other hand&lt;/li&gt;
-&lt;li&gt;using &lt;code&gt;copy!&lt;/code&gt;, update &lt;code&gt;VG_points&lt;/code&gt; and &lt;code&gt;VB_points&lt;/code&gt; with the new values&lt;/li&gt;
-&lt;li&gt;using &lt;code&gt;copy!&lt;/code&gt; and &lt;code&gt;filter_coeffs&lt;/code&gt;, update the spline coefficients&lt;/li&gt;
-&lt;li&gt;using &lt;code&gt;print&lt;/code&gt;, display the iteration counter and the current error&lt;/li&gt;
-&lt;li&gt;increment the iteration counter&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;Now create the main computational loop: * use a &lt;code&gt;while&lt;/code&gt; construct, which will iterate as long as the error is greater than the tolerance, and the iteration counter less than the maximum iterations * in an embedded loop over the &lt;span class="math"&gt;\(y_t\)&lt;/span&gt; grid: * compute the value of &lt;span class="math"&gt;\(V^B\)&lt;/span&gt; at next iteration using &lt;code&gt;VB_next&lt;/code&gt;, and store it in &lt;code&gt;VB_points_next&lt;/code&gt; * in an embedded loop over the &lt;span class="math"&gt;\(a_t\)&lt;/span&gt; grid, optimize &lt;code&gt;VG_objective&lt;/code&gt; over &lt;span class="math"&gt;\(a_{t+1}\)&lt;/span&gt;, and store the result in &lt;code&gt;VG_points_next&lt;/code&gt; * update the error, which is the max of the (infinite norm) distance between &lt;code&gt;VG_points&lt;/code&gt; and &lt;code&gt;VG_points_next&lt;/code&gt; on one hand, and &lt;code&gt;VB_points&lt;/code&gt; and &lt;code&gt;VB_points_next&lt;/code&gt; on the other hand * using &lt;code&gt;copy!&lt;/code&gt;, update &lt;code&gt;VG_points&lt;/code&gt; and &lt;code&gt;VB_points&lt;/code&gt; with the new values * using &lt;code&gt;copy!&lt;/code&gt; and &lt;code&gt;filter_coeffs&lt;/code&gt;, update the spline coefficients * using &lt;code&gt;print&lt;/code&gt;, display the iteration counter and the current error * increment the iteration counter&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -3980,7 +3905,7 @@ Iteration 117: error=9.423434876865144e-7
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Verify that for $y_t=0$, the default threshold is 21% of debt to (quarterly) GDP:&lt;/p&gt;
+&lt;p&gt;Verify that for &lt;span class="math"&gt;\(y_t=0\)&lt;/span&gt;, the default threshold is 21% of debt to (quarterly) GDP:&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -4019,4 +3944,4 @@ In&amp;nbsp;[77]:
 
 &lt;/div&gt;&lt;/p&gt;
 &lt;p&gt;Copyright © 2014 Sébastien Villemot &lt;code&gt;&amp;lt;sebastien@dynare.org&amp;gt;&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;License: &lt;a href="http://creativecommons.org/licenses/by-sa/3.0/"&gt;Creative Commons Attribution-Share Alike 3.0&lt;/a&gt; or &lt;a href="http://www.gnu.org/licenses/gpl.html"&gt;GNU General Public License version 3 or later&lt;/a&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Sébastien Villemot</dc:creator><pubDate>Mon, 28 Jul 2014 12:00:00 -0400</pubDate><guid>tag:econforge.github.io,2014-07-28:posts/2014/Jul/28/cef2014-julia/</guid><category>HP filter</category><category>yield-to-maturity</category><category>gauss-hermite</category><category>sovereign default</category></item></channel></rss>
+&lt;p&gt;License: &lt;a href="http://creativecommons.org/licenses/by-sa/3.0/"&gt;Creative Commons Attribution-Share Alike 3.0&lt;/a&gt; or &lt;a href="http://www.gnu.org/licenses/gpl.html"&gt;GNU General Public License version 3 or later&lt;/a&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Sébastien Villemot</dc:creator><pubDate>Mon, 28 Jul 2014 12:00:00 -0400</pubDate><guid>tag:econforge.github.io,2014-07-28:posts/2014/juil./28/cef2014-julia/</guid><category>HP filter</category><category>yield-to-maturity</category><category>gauss-hermite</category><category>sovereign default</category></item></channel></rss>

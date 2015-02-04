@@ -113,16 +113,7 @@ and Finance (CEF) conference 2014 in Oslo.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Julia is a new programming language for technical computing, created at the MIT in 2012. Its main features are:</p>
-<ul>
-<li>Syntax close to MATLAB/Octave, with ideas also borrowed from Python, Ruby, Lisp</li>
-<li>Good performance, close to compiled languages, thanks to just-in-time (JIT) compiler</li>
-<li>Free software / open source</li>
-<li>Designed for parallel and distributed computation</li>
-<li>Easily interfaceable with other languages (C, Fortran, Python)</li>
-<li>Multiple dispatch: ability to define function behavior across many combinations of argument types</li>
-<li>Large number of package extensions, lively community</li>
-</ul>
+<p>Julia is a new programming language for technical computing, created at the MIT in 2012. Its main features are: * Syntax close to MATLAB/Octave, with ideas also borrowed from Python, Ruby, Lisp * Good performance, close to compiled languages, thanks to just-in-time (JIT) compiler * Free software / open source * Designed for parallel and distributed computation * Easily interfaceable with other languages (C, Fortran, Python) * Multiple dispatch: ability to define function behavior across many combinations of argument types * Large number of package extensions, lively community</p>
 </div>
 </div>
 </div>
@@ -141,10 +132,8 @@ and Finance (CEF) conference 2014 in Oslo.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Here we show how to implement a Hodrick-Prescott filter in Julia. Recall that, given a timeseries $y_t$ and a smoothing parameter $\lambda$, the filtered trend $\tau_t$ is defined by:
-$$\min_{\tau}\left(\sum_{t = 1}^T {(y_t - \tau _t )^2 }  + \lambda \sum_{t = 2}^{T - 1} {[(\tau _{t+1}  - \tau _t) - (\tau _t  - \tau _{t - 1} )]^2 }\right)$$</p>
-<p>The first-order conditions of this minimization problem can be expressed by the following linear system:
-$$\begin{pmatrix}
+<p>Here we show how to implement a Hodrick-Prescott filter in Julia. Recall that, given a timeseries <span class="math">\(y_t\)</span> and a smoothing parameter <span class="math">\(\lambda\)</span>, the filtered trend <span class="math">\(\tau_t\)</span> is defined by: <span class="math">\[\min_{\tau}\left(\sum_{t = 1}^T {(y_t - \tau _t )^2 }  + \lambda \sum_{t = 2}^{T - 1} {[(\tau _{t+1}  - \tau _t) - (\tau _t  - \tau _{t - 1} )]^2 }\right)\]</span></p>
+<p>The first-order conditions of this minimization problem can be expressed by the following linear system: <span class="math">\[\begin{pmatrix}
 1+\lambda &amp; -2\lambda  &amp; \lambda    &amp;           &amp;            &amp;            &amp;           \\
 -2\lambda &amp; 1+5\lambda &amp; -4\lambda  &amp; \ddots    &amp;            &amp;            &amp;           \\
 \lambda   &amp; -4\lambda  &amp; 1+6\lambda &amp; \ddots    &amp; \ddots     &amp;            &amp;           \\
@@ -172,7 +161,7 @@ y_t \\
 \vdots \\
 y_T
 \end{pmatrix}
-$$</p>
+\]</span></p>
 <p>The following function implements the Hodrick-Prescott filter by computing the filtered trend, given a timeseries and a smoothing parameter:</p>
 </div>
 </div>
@@ -228,15 +217,7 @@ hp_filter (generic function with 1 method)
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The <code>spdiagm</code> function is used to create a matrix by specifying its nonzero diagonals. The right-divide operator (antislash) is used to compute the solution of the linear system.</p>
-<p>Features to be noted:</p>
-<ul>
-<li>Matrices can be easily constructed with brackets</li>
-<li>Function arguments are typed: this is optional most of the time, but improves performance</li>
-<li>The type <code>Float64</code> represents double precision floating point numbers (they occupy 64 bits in memory). It is the default type when manipulating real numbers.</li>
-<li>There is no output argument (it is the last computation that is returned as output)</li>
-<li>The implicit multiplication operator in monomials (<code>2lambda</code>)</li>
-<li>One can construct tuples using a comma-separated list within parenthesis (see the 5-tuples as first and second argument of <code>spdiagm</code>).</li>
-</ul>
+<p>Features to be noted: * Matrices can be easily constructed with brackets * Function arguments are typed: this is optional most of the time, but improves performance * The type <code>Float64</code> represents double precision floating point numbers (they occupy 64 bits in memory). It is the default type when manipulating real numbers. * There is no output argument (it is the last computation that is returned as output) * The implicit multiplication operator in monomials (<code>2lambda</code>) * One can construct tuples using a comma-separated list within parenthesis (see the 5-tuples as first and second argument of <code>spdiagm</code>).</p>
 <p>Now we construct a timeseries as the simulation over 40 periods of a random walk with gaussian innovation:</p>
 </div>
 </div>
@@ -363,7 +344,7 @@ In&nbsp;[3]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Note that there is a dot at the end of <code>1600</code>, in order to emphasize the fact that it is a floating point. If the dot is omitted, the number is interpreted as an integer, and this leads to an error. This is a consequence of the typing system of Julia, we&#39;ll return to that later.</p>
+<p>Note that there is a dot at the end of <code>1600</code>, in order to emphasize the fact that it is a floating point. If the dot is omitted, the number is interpreted as an integer, and this leads to an error. This is a consequence of the typing system of Julia, we'll return to that later.</p>
 </div>
 </div>
 </div>
@@ -402,7 +383,7 @@ while loading In[4], in expression starting on line 1</pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now we want to plot the result, using the <code>PyPlot</code> module which is based on Python&#39;s <em>matplotlib</em>. Note that a module needs to be loaded only once per Julia session.</p>
+<p>Now we want to plot the result, using the <code>PyPlot</code> module which is based on Python's <em>matplotlib</em>. Note that a module needs to be loaded only once per Julia session.</p>
 </div>
 </div>
 </div>
@@ -442,7 +423,7 @@ INFO: Loading help data...
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Finally let&#39;s do the plot:</p>
+<p>Finally let's do the plot:</p>
 </div>
 </div>
 </div>
@@ -506,13 +487,10 @@ PyObject &lt;matplotlib.text.Text object at 0xb7249d0&gt;
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Suppose that we want to compute the yield-to-maturity (YTM) of a bond with pays a yearly coupon $C$. The principal is 100, which is due at date $T$ (expressed in years, today is date 0). The bond is priced today at $P$ (excluding accrued interest).</p>
-<p>First consider the case when $T$ is an integer. For a given annual discount rate $\delta$, the net present value of the flow of payments is the following:
-$$NPV(\delta) = \frac{100}{(1+\delta)^T}+ \sum_{t=1}^{T} \frac{C}{(1+\delta)^t}$$</p>
-<p>If $T$ is not an integer, and if $\lfloor T \rfloor$ is the biggest integer less than $T$, then the NPV is:
-$$NPV(\delta) = \frac{1}{(1+\delta)^{T-\lfloor T \rfloor}} \left( \frac{100}{(1+\delta)^{\lfloor T \rfloor}}+  \sum_{t=1}^{\lfloor T \rfloor} \frac{C}{(1+\delta)^t}\right)$$</p>
-<p>The YTM is the value $\delta^*$ that equalizes the NPV with the bond price (including accrued interests), <em>i.e.</em> such that:
-$$P + (1-T+\lfloor T \rfloor)C = NPV(\delta^*)$$</p>
+<p>Suppose that we want to compute the yield-to-maturity (YTM) of a bond with pays a yearly coupon <span class="math">\(C\)</span>. The principal is 100, which is due at date <span class="math">\(T\)</span> (expressed in years, today is date 0). The bond is priced today at <span class="math">\(P\)</span> (excluding accrued interest).</p>
+<p>First consider the case when <span class="math">\(T\)</span> is an integer. For a given annual discount rate <span class="math">\(\delta\)</span>, the net present value of the flow of payments is the following: <span class="math">\[NPV(\delta) = \frac{100}{(1+\delta)^T}+ \sum_{t=1}^{T} \frac{C}{(1+\delta)^t}\]</span></p>
+<p>If <span class="math">\(T\)</span> is not an integer, and if <span class="math">\(\lfloor T \rfloor\)</span> is the biggest integer less than <span class="math">\(T\)</span>, then the NPV is: <span class="math">\[NPV(\delta) = \frac{1}{(1+\delta)^{T-\lfloor T \rfloor}} \left( \frac{100}{(1+\delta)^{\lfloor T \rfloor}}+  \sum_{t=1}^{\lfloor T \rfloor} \frac{C}{(1+\delta)^t}\right)\]</span></p>
+<p>The YTM is the value <span class="math">\(\delta^*\)</span> that equalizes the NPV with the bond price (including accrued interests), <em>i.e.</em> such that: <span class="math">\[P + (1-T+\lfloor T \rfloor)C = NPV(\delta^*)\]</span></p>
 <p>We now implement this computation in Julia. First, we load two packages that we will need for our purpose. The first is <code>DateTime</code>, useful for time computations, and the second is <code>Roots</code>, which provides a nonlinear zero finder for univariate functions via the <code>fzero</code> function.</p>
 </div>
 </div>
@@ -600,14 +578,7 @@ ytm (generic function with 1 method)
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The nested function <code>npv_minus_price</code> computes the difference between the NPV for a given yield, and the market price including accrued interest. Then the <code>fzero</code> function computes a zero of the <code>npv_minus_price</code> function, which is the YTM. The zero solver needs an initial value for starting the algorithm, and we use the coupon rate for that purpose.</p>
-<p>Features to be noted:</p>
-<ul>
-<li>Functions can be nested. Inside functions inherit from variables of the enclosing function</li>
-<li>The <code>while</code>/<code>end</code> control structure, similar to MATLAB&#39;s</li>
-<li>Updating arithmetic operators (<code>-=</code>, <code>/=</code>), which do both a computation and a variable assignment (<em>e.g.</em> <code>x /= 2</code> is equivalent to <code>x = x/2</code>)</li>
-<li>Type converters: <code>year()</code>, <code>integer()</code></li>
-<li>Fields of a structure can be accessed with a dot syntax, as in MATLAB (<em>e.g.</em> <code>r.zero</code>)</li>
-</ul>
+<p>Features to be noted: * Functions can be nested. Inside functions inherit from variables of the enclosing function * The <code>while</code>/<code>end</code> control structure, similar to MATLAB's * Updating arithmetic operators (<code>-=</code>, <code>/=</code>), which do both a computation and a variable assignment (<em>e.g.</em> <code>x /= 2</code> is equivalent to <code>x = x/2</code>) * Type converters: <code>year()</code>, <code>integer()</code> * Fields of a structure can be accessed with a dot syntax, as in MATLAB (<em>e.g.</em> <code>r.zero</code>)</p>
 </div>
 </div>
 </div>
@@ -765,7 +736,7 @@ Int64
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The default floating point type is 64-bit (equivalent of Fortran&#39;s <code>double precision</code> or C&#39;s <code>double</code>):</p>
+<p>The default floating point type is 64-bit (equivalent of Fortran's <code>double precision</code> or C's <code>double</code>):</p>
 </div>
 </div>
 </div>
@@ -1806,13 +1777,7 @@ In&nbsp;[34]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Type annotations can be used at different places:</p>
-<ol>
-<li>in the declaration of composite types (see above)</li>
-<li>for qualifying function arguments (see above)</li>
-<li>to assert that something is of a given type</li>
-<li>to indicate the type of a variable (only local variables in functions, not for global variables)</li>
-</ol>
+<p>Type annotations can be used at different places: 1. in the declaration of composite types (see above) 2. for qualifying function arguments (see above) 3. to assert that something is of a given type 4. to indicate the type of a variable (only local variables in functions, not for global variables)</p>
 <p>Note that type annotations are always optional (except for function arguments when doing multiple dispatch, see below). Type annotations can increase performance when used judiciously, see below.</p>
 </div>
 </div>
@@ -1995,12 +1960,7 @@ In&nbsp;[38]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Functions can be constructed using three syntaxes:</p>
-<ul>
-<li>with the <code>function</code> keyword</li>
-<li>using a compact “assignement form” when the function body is simple</li>
-<li>as anonymous function (<em>i.e.</em> not associated to a function name), with the arrow syntax (<code>-&gt;</code>)</li>
-</ul>
+<p>Functions can be constructed using three syntaxes: * with the <code>function</code> keyword * using a compact “assignement form” when the function body is simple * as anonymous function (<em>i.e.</em> not associated to a function name), with the arrow syntax (<code>-&gt;</code>)</p>
 <p>Here is an example of compact function declaration:</p>
 </div>
 </div>
@@ -2477,14 +2437,9 @@ Timeseries(2014-06-21,12,[5.0,8.0,12.0])
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>For solving the model, we will need to integrate expectations with respect to Gaussian shocks. We will therefore use the Gauss-Hermite quadrature, which is well-suited to that case. The quadrature consists in approximating an integral by a finite weighted sum. More precisely, the Gauss-Hermite quadrature is:
-$$\int_{-\infty}^{+\infty} f(x)e^{-x^2} dx \approx \sum_{i=1}^{n} w_i f(x_i)$$
-where $n$ determines the precision of the approximation (the higher $n$, the more precise), the $x_i$ are the roots of the $n$-th order Hermite polynomial $H_n(x)$, and the associated weights are:
-$$w_i = \frac{2^{n-1} n! \sqrt{\pi}}{n^2 [H_{n-1}(x_i)]^2}$$</p>
-<p>In turn, the Hermite polynomials are defined by the following recursive equations (where $H'$ denotes the derivative of $H$):
-$$H_0(x) = 1$$
-$$H_n(x) = 2xH_{n-1}(x) - H'_{n-1}(x)$$</p>
-<p>We are now going to implement the computation of the points and weights as a function of $n$. For that purpose, we will use the <code>Polynomial</code> package, whose documentation can be seen <a href="https://github.com/vtjnash/Polynomial.jl/blob/master/README.md">there</a>.</p>
+<p>For solving the model, we will need to integrate expectations with respect to Gaussian shocks. We will therefore use the Gauss-Hermite quadrature, which is well-suited to that case. The quadrature consists in approximating an integral by a finite weighted sum. More precisely, the Gauss-Hermite quadrature is: <span class="math">\[\int_{-\infty}^{+\infty} f(x)e^{-x^2} dx \approx \sum_{i=1}^{n} w_i f(x_i)\]</span> where <span class="math">\(n\)</span> determines the precision of the approximation (the higher <span class="math">\(n\)</span>, the more precise), the <span class="math">\(x_i\)</span> are the roots of the <span class="math">\(n\)</span>-th order Hermite polynomial <span class="math">\(H_n(x)\)</span>, and the associated weights are: <span class="math">\[w_i = \frac{2^{n-1} n! \sqrt{\pi}}{n^2 [H_{n-1}(x_i)]^2}\]</span></p>
+<p>In turn, the Hermite polynomials are defined by the following recursive equations (where <span class="math">\(H&#39;\)</span> denotes the derivative of <span class="math">\(H\)</span>): <span class="math">\[H_0(x) = 1\]</span> <span class="math">\[H_n(x) = 2xH_{n-1}(x) - H&#39;_{n-1}(x)\]</span></p>
+<p>We are now going to implement the computation of the points and weights as a function of <span class="math">\(n\)</span>. For that purpose, we will use the <code>Polynomial</code> package, whose documentation can be seen <a href="https://github.com/vtjnash/Polynomial.jl/blob/master/README.md">there</a>.</p>
 <p>First, load the package.</p>
 </div>
 </div>
@@ -2509,7 +2464,7 @@ In&nbsp;[48]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now, write a function that, given $n$, creates $H_n$. You will need the <code>Poly</code> function to create basic polynomials, the <code>polyder</code> function to compute the derivative of a polynomial. Standard addition and multiplication work on polynomials as expected. Use a <code>for</code> loop to do the recursion.</p>
+<p>Now, write a function that, given <span class="math">\(n\)</span>, creates <span class="math">\(H_n\)</span>. You will need the <code>Poly</code> function to create basic polynomials, the <code>polyder</code> function to compute the derivative of a polynomial. Standard addition and multiplication work on polynomials as expected. Use a <code>for</code> loop to do the recursion.</p>
 </div>
 </div>
 </div>
@@ -2559,7 +2514,7 @@ compute_hermite_polynomial (generic function with 1 method)
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Verify that $H_5(x) = 32x^5-160x^3+120x$:</p>
+<p>Verify that <span class="math">\(H_5(x) = 32x^5-160x^3+120x\)</span>:</p>
 </div>
 </div>
 </div>
@@ -2602,7 +2557,7 @@ Poly(32x^5 - 160x^3 + 120x)
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now, write a function that, given $n$, returns a tuple consisting of the two vectors $x_i$ and $w_i$. Use the <code>roots</code> function to compute the roots of a polynomial, the <code>polyval</code> function to evaluate a polynomial, and the <code>factorial</code> function. You can use a comprehension to create the vector of weights. Also, you can use a type annotation to indicate to Julia that the roots of the polynomial are real, and not complex.</p>
+<p>Now, write a function that, given <span class="math">\(n\)</span>, returns a tuple consisting of the two vectors <span class="math">\(x_i\)</span> and <span class="math">\(w_i\)</span>. Use the <code>roots</code> function to compute the roots of a polynomial, the <code>polyval</code> function to evaluate a polynomial, and the <code>factorial</code> function. You can use a comprehension to create the vector of weights. Also, you can use a type annotation to indicate to Julia that the roots of the polynomial are real, and not complex.</p>
 </div>
 </div>
 </div>
@@ -2654,7 +2609,7 @@ compute_hermite_points (generic function with 1 method)
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now, verify that, for $n=3$, one has: $(x_1,w_1) \approx (-1.22,0.29)$, $(x_2,w_2) \approx (0,1.18)$, $(x_3,w_3) \approx (1.22,0.29)$:</p>
+<p>Now, verify that, for <span class="math">\(n=3\)</span>, one has: <span class="math">\((x_1,w_1) \approx (-1.22,0.29)\)</span>, <span class="math">\((x_2,w_2) \approx (0,1.18)\)</span>, <span class="math">\((x_3,w_3) \approx (1.22,0.29)\)</span>:</p>
 </div>
 </div>
 </div>
@@ -2710,24 +2665,14 @@ In&nbsp;[52]:
 <p>We consider a country with a representative agent, producing and consuming a single homogeneous good. The production stream is exogenous and has a stochastic growth trend.</p>
 <p>At every period, the difference between production and consumption is financed on international markets. The country therefore accumulates debt (or assets) which is short-term (one period), and can decide to default or repay at every period. If it repays, access to financial markets continues. If it defaults, it is barred from financial markets (and therefore, being in autarky, has to consume what it produces), and moreover suffers from a penalty (proportional to GDP); exclusion from financial markets can last several periods, and terminates with a given probability at each period.</p>
 <p>International investors are risk-neutral and in perfect competition. The interest rate that the country faces is therefore equal to the international riskless rate (assumed to be constant), plus a risk premium equal to the model-consistent risk of default in next period.</p>
-<p>Let&#39;s now describe the model equations. Since the model has a stochastic trend, equations and variables are in detrended form. The two state variables are $y_t$ the (log of the gross) growth rate and $a_t$ the detrended assets due at date $t$.</p>
-<p>The law of motion of $y_t$ is:
-$$y_t = (1-\rho_g)\mu_y +\rho_g y_{t-1} + \varepsilon_t$$
-where $\varepsilon_t \leadsto \mathcal{N}(0, \sigma_g)$ and $\mu_y = ln(\mu_g) - \frac{\sigma_g^2}{2(1-\rho_g^2)}$.</p>
-<p>Detrended GDP as a function of $y_t$ is:
-$$Q_t = \frac{e^{y_t}}{\mu_g}$$</p>
-<p>We now describe the value function of the country. The instantaneous utility function is:
-$$u(c) = \frac{c^{1-\gamma}}{1-\gamma}$$
-and the discount factor is $\beta$.</p>
-<p>$V^G(a_t, y_t)$ is the value function if the country repays, $V^B(y_t)$ is the value function under autarky (after a default), and $V(a_t,y_t)$ is the optimal choice between repayment and default, which is given by:
-$$V(a_t,y_t) = \max\{ V^G(a_t,y_t), V^B(y_t) \}$$</p>
-<p>The value function under autarky depends on $\delta$ (the penalty) and $\lambda$ (the probability of redemption):
-$$V^B(y_t) = u\left[(1-\delta)Q_t\right] + \beta e^{y_t(1-\gamma)}\left[\lambda \mathbb{E}_t V^G(0, y_{t+1}) + (1-\lambda) \mathbb{E}_t V^B(y_{t+1})\right]$$</p>
-<p>The value function under repayment depends of $q(y_t, a_{t+1})$ which is the price at which investors accept to buy bonds due tomorrow:
-$$V^G(a_t, y_t) = \max_{a_{t+1}} \left\{u\left[Q_t + a_t - a_{t+1} q(y_t, a_{t+1}) e^{y_t}\right] + \beta e^{y_t(1-\gamma)} \mathbb{E}_t V(a_{t+1}, y_{t+1})\right\}$$</p>
-<p>Finally, the price function of bonds is:
-$$q(y_t, a_{t+1}) = \frac{\mathbb{P}(y_{t+1} \geq y^*(a_{t+1}) | y_t)}{1+r}$$
-where $r$ is the riskless interest rate, and $y^*(a_{t+1})$ is the default threshold defined by $V^G(a_{t+1}, y^*(a_{t+1})) = V^B(y^*(a_{t+1}))$.</p>
+<p>Let's now describe the model equations. Since the model has a stochastic trend, equations and variables are in detrended form. The two state variables are <span class="math">\(y_t\)</span> the (log of the gross) growth rate and <span class="math">\(a_t\)</span> the detrended assets due at date <span class="math">\(t\)</span>.</p>
+<p>The law of motion of <span class="math">\(y_t\)</span> is: <span class="math">\[y_t = (1-\rho_g)\mu_y +\rho_g y_{t-1} + \varepsilon_t\]</span> where <span class="math">\(\varepsilon_t \leadsto \mathcal{N}(0, \sigma_g)\)</span> and <span class="math">\(\mu_y = ln(\mu_g) - \frac{\sigma_g^2}{2(1-\rho_g^2)}\)</span>.</p>
+<p>Detrended GDP as a function of <span class="math">\(y_t\)</span> is: <span class="math">\[Q_t = \frac{e^{y_t}}{\mu_g}\]</span></p>
+<p>We now describe the value function of the country. The instantaneous utility function is: <span class="math">\[u(c) = \frac{c^{1-\gamma}}{1-\gamma}\]</span> and the discount factor is <span class="math">\(\beta\)</span>.</p>
+<p><span class="math">\(V^G(a_t, y_t)\)</span> is the value function if the country repays, <span class="math">\(V^B(y_t)\)</span> is the value function under autarky (after a default), and <span class="math">\(V(a_t,y_t)\)</span> is the optimal choice between repayment and default, which is given by: <span class="math">\[V(a_t,y_t) = \max\{ V^G(a_t,y_t), V^B(y_t) \}\]</span></p>
+<p>The value function under autarky depends on <span class="math">\(\delta\)</span> (the penalty) and <span class="math">\(\lambda\)</span> (the probability of redemption): <span class="math">\[V^B(y_t) = u\left[(1-\delta)Q_t\right] + \beta e^{y_t(1-\gamma)}\left[\lambda \mathbb{E}_t V^G(0, y_{t+1}) + (1-\lambda) \mathbb{E}_t V^B(y_{t+1})\right]\]</span></p>
+<p>The value function under repayment depends of <span class="math">\(q(y_t, a_{t+1})\)</span> which is the price at which investors accept to buy bonds due tomorrow: <span class="math">\[V^G(a_t, y_t) = \max_{a_{t+1}} \left\{u\left[Q_t + a_t - a_{t+1} q(y_t, a_{t+1}) e^{y_t}\right] + \beta e^{y_t(1-\gamma)} \mathbb{E}_t V(a_{t+1}, y_{t+1})\right\}\]</span></p>
+<p>Finally, the price function of bonds is: <span class="math">\[q(y_t, a_{t+1}) = \frac{\mathbb{P}(y_{t+1} \geq y^*(a_{t+1}) | y_t)}{1+r}\]</span> where <span class="math">\(r\)</span> is the riskless interest rate, and <span class="math">\(y^*(a_{t+1})\)</span> is the default threshold defined by <span class="math">\(V^G(a_{t+1}, y^*(a_{t+1})) = V^B(y^*(a_{t+1}))\)</span>.</p>
 </div>
 </div>
 </div>
@@ -2746,8 +2691,8 @@ where $r$ is the riskless interest rate, and $y^*(a_{t+1})$ is the default thres
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We are going to use the following (quarterly) calibration: $\gamma = 2$, $r = 0.01$, $\beta=0.8$, $\lambda=0.1$, $\delta=0.02$, $\mu_g = 1.006$, $\sigma_g = 0.03$, $\rho_g = 0.17$.</p>
-<p>Assign each parameter to a constant variable of the same. Also create a variable for $\mu_y$, using the relationship shown above.</p>
+<p>We are going to use the following (quarterly) calibration: <span class="math">\(\gamma = 2\)</span>, <span class="math">\(r = 0.01\)</span>, <span class="math">\(\beta=0.8\)</span>, <span class="math">\(\lambda=0.1\)</span>, <span class="math">\(\delta=0.02\)</span>, <span class="math">\(\mu_g = 1.006\)</span>, <span class="math">\(\sigma_g = 0.03\)</span>, <span class="math">\(\rho_g = 0.17\)</span>.</p>
+<p>Assign each parameter to a constant variable of the same. Also create a variable for <span class="math">\(\mu_y\)</span>, using the relationship shown above.</p>
 </div>
 </div>
 </div>
@@ -2808,7 +2753,7 @@ In&nbsp;[53]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Using the short form syntax, create functions for computing the instantaneous utility (as a function of consumption) and GDP (as a function of $y_t$):</p>
+<p>Using the short form syntax, create functions for computing the instantaneous utility (as a function of consumption) and GDP (as a function of <span class="math">\(y_t\)</span>):</p>
 </div>
 </div>
 </div>
@@ -2895,7 +2840,7 @@ gdp (generic function with 1 method)
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>As explained above, the two state variables are $y_t$ and $a_t$. Since we are going to interpolate with cubic splines, we have to decide of a grid on which to make the approximation. We will use the interval $[-0.3,0]$ for $a_t$, with 15 points. And the interval $\left[\mu_y-\frac{6\sigma_g}{\sqrt{1-\rho_g^2}}, \mu_y+\frac{6\sigma_g}{\sqrt{1-\rho_g^2}}\right]$ for $y_t$, with 10 points.</p>
+<p>As explained above, the two state variables are <span class="math">\(y_t\)</span> and <span class="math">\(a_t\)</span>. Since we are going to interpolate with cubic splines, we have to decide of a grid on which to make the approximation. We will use the interval <span class="math">\([-0.3,0]\)</span> for <span class="math">\(a_t\)</span>, with 15 points. And the interval <span class="math">\(\left[\mu_y-\frac{6\sigma_g}{\sqrt{1-\rho_g^2}}, \mu_y+\frac{6\sigma_g}{\sqrt{1-\rho_g^2}}\right]\)</span> for <span class="math">\(y_t\)</span>, with 10 points.</p>
 <p>Create variables <code>min_a</code>, <code>max_a</code>, <code>ngrid_a</code> and <code>min_y</code>, <code>max_y</code>, <code>ngrid_y</code>. Then create vectors <code>grid_a</code> and <code>grid_y</code>, using the <code>linspace</code> function.</p>
 </div>
 </div>
@@ -2958,7 +2903,7 @@ In&nbsp;[56]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now, let&#39;s give initial values for $V^G$ and $V^B$ on the grid points. We will use $V^B(y_t) = u((1-\delta)Q_t)$ and $V^G(a_t, y_t) = u(Q_t + a_t)$.</p>
+<p>Now, let's give initial values for <span class="math">\(V^G\)</span> and <span class="math">\(V^B\)</span> on the grid points. We will use <span class="math">\(V^B(y_t) = u((1-\delta)Q_t)\)</span> and <span class="math">\(V^G(a_t, y_t) = u(Q_t + a_t)\)</span>.</p>
 <p>Create a vector <code>VB_points</code> and a matrix <code>VG_points</code> initialized with these values. For <code>VB_points</code>, you can use a comprehension. Declare both variables as constant; note that this means that the variable will always point to the same array, but this does not prevent modification of array elements.</p>
 </div>
 </div>
@@ -3023,7 +2968,7 @@ In&nbsp;[58]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The following example shows how to approximate the absolute function by a 5-points spline over $[-1, 1]$. For 2-dimensional approximation, the principle is the same: arguments to <code>filter_coeffs</code> and <code>eval_UC_spline</code> should be vectors of 2 elements (or matrices for the point values or the coefficients).</p>
+<p>The following example shows how to approximate the absolute function by a 5-points spline over <span class="math">\([-1, 1]\)</span>. For 2-dimensional approximation, the principle is the same: arguments to <code>filter_coeffs</code> and <code>eval_UC_spline</code> should be vectors of 2 elements (or matrices for the point values or the coefficients).</p>
 </div>
 </div>
 </div>
@@ -3148,7 +3093,7 @@ In&nbsp;[60]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Write functions <code>VG(a, y)</code> and <code>VB(y)</code> that evaluate the spline at any point in the state space. <em>Warning</em>: for <code>VG</code>, the last argument in the call to <code>eval_UC_spline</code> must be <code>[a, y]&#39;</code> (note the transpose, needed to create a $1\times 2$ matrix).</p>
+<p>Write functions <code>VG(a, y)</code> and <code>VB(y)</code> that evaluate the spline at any point in the state space. <em>Warning</em>: for <code>VG</code>, the last argument in the call to <code>eval_UC_spline</code> must be <code>[a, y]'</code> (note the transpose, needed to create a <span class="math">\(1\times 2\)</span> matrix).</p>
 </div>
 </div>
 </div>
@@ -3355,7 +3300,7 @@ V (generic function with 1 method)
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>First, here is an example of the probability that a variable following $\mathcal{N}(\mu_y, \sigma_g)$ is less than $2\mu_y$, using the <code>Distributions</code> package:</p>
+<p>First, here is an example of the probability that a variable following <span class="math">\(\mathcal{N}(\mu_y, \sigma_g)\)</span> is less than <span class="math">\(2\mu_y\)</span>, using the <code>Distributions</code> package:</p>
 </div>
 </div>
 </div>
@@ -3400,13 +3345,8 @@ In&nbsp;[66]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now write the bond price function <code>q(y, a1)</code> (where <code>a1</code> denotes $a_{t+1}$). The idea is to compute tomorrow&#39;s default threshold $y^*$ (using <code>fzero</code> on the difference between <code>VG</code> and <code>VB</code>), and then to compute the corresponding default probability with the <code>cdf</code> and <code>Normal</code> functions.</p>
-<p>In order to speed up the computation, you can treat special cases separately:</p>
-<ul>
-<li>if the assets are positive, the risk premium is zero</li>
-<li>if for a large value of $y_{t+1}$ (like 6 standard deviations above the mean), default is still preferable to repayment, then the bond price is approximatively zero</li>
-<li>if for a small value of $y_{t+1}$ (like 6 standard deviations below the mean), repayment is still preferable to default, then the risk premium is approximatively zero</li>
-</ul>
+<p>Now write the bond price function <code>q(y, a1)</code> (where <code>a1</code> denotes <span class="math">\(a_{t+1}\)</span>). The idea is to compute tomorrow's default threshold <span class="math">\(y^*\)</span> (using <code>fzero</code> on the difference between <code>VG</code> and <code>VB</code>), and then to compute the corresponding default probability with the <code>cdf</code> and <code>Normal</code> functions.</p>
+<p>In order to speed up the computation, you can treat special cases separately: * if the assets are positive, the risk premium is zero * if for a large value of <span class="math">\(y_{t+1}\)</span> (like 6 standard deviations above the mean), default is still preferable to repayment, then the bond price is approximatively zero * if for a small value of <span class="math">\(y_{t+1}\)</span> (like 6 standard deviations below the mean), repayment is still preferable to default, then the risk premium is approximatively zero</p>
 </div>
 </div>
 </div>
@@ -3525,10 +3465,8 @@ In&nbsp;[68]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now, if $x_i$ and $w_i$ are the hermite points, and given that $\varepsilon_t \leadsto \mathcal{N}(0, \sigma_g)$, the following approximation holds (using the change of variable $y = \sigma_g\sqrt{2}x$):
-$$\mathbb{E}_t f(\varepsilon_{t+1}) = \int_{-\infty}^{+\infty} \frac{1}{\sigma_g\sqrt{2\pi}}f(y)e^{-\frac{y^2}{2\sigma_g^2}}dy = \int_{-\infty}^{+\infty} \frac{1}{\sqrt{\pi}} f(\sigma_g\sqrt{2}x)e^{-x^2}dx \approx \sum_{i=1}^n \frac{w_i}{\sqrt{\pi}} f(\sigma_g\sqrt{2} x_i) = \sum_{i=1}^n w'_i f(x'_i)$$
-where $w'_i=\frac{w_i}{\sqrt{\pi}}$ and $x'_i=\sigma_g\sqrt{2} x_i$.</p>
-<p>Compute the vector of $x'_i$ and $w'_i$.</p>
+<p>Now, if <span class="math">\(x_i\)</span> and <span class="math">\(w_i\)</span> are the hermite points, and given that <span class="math">\(\varepsilon_t \leadsto \mathcal{N}(0, \sigma_g)\)</span>, the following approximation holds (using the change of variable <span class="math">\(y = \sigma_g\sqrt{2}x\)</span>): <span class="math">\[\mathbb{E}_t f(\varepsilon_{t+1}) = \int_{-\infty}^{+\infty} \frac{1}{\sigma_g\sqrt{2\pi}}f(y)e^{-\frac{y^2}{2\sigma_g^2}}dy = \int_{-\infty}^{+\infty} \frac{1}{\sqrt{\pi}} f(\sigma_g\sqrt{2}x)e^{-x^2}dx \approx \sum_{i=1}^n \frac{w_i}{\sqrt{\pi}} f(\sigma_g\sqrt{2} x_i) = \sum_{i=1}^n w&#39;_i f(x&#39;_i)\]</span> where <span class="math">\(w&#39;_i=\frac{w_i}{\sqrt{\pi}}\)</span> and <span class="math">\(x&#39;_i=\sigma_g\sqrt{2} x_i\)</span>.</p>
+<p>Compute the vector of <span class="math">\(x&#39;_i\)</span> and <span class="math">\(w&#39;_i\)</span>.</p>
 </div>
 </div>
 </div>
@@ -3588,7 +3526,7 @@ In&nbsp;[69]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Write the function <code>VB_next(y)</code> that, given $y_t$, computes $u\left[(1-\delta)Q_t\right] + \beta e^{y_t(1-\gamma)}\left[\lambda \mathbb{E}_t V^G(0, y_{t+1}) + (1-\lambda) \mathbb{E}_t V^B(y_{t+1})\right]$ (the right hand side in the Bellman equation defining $V^B$).</p>
+<p>Write the function <code>VB_next(y)</code> that, given <span class="math">\(y_t\)</span>, computes <span class="math">\(u\left[(1-\delta)Q_t\right] + \beta e^{y_t(1-\gamma)}\left[\lambda \mathbb{E}_t V^G(0, y_{t+1}) + (1-\lambda) \mathbb{E}_t V^B(y_{t+1})\right]\)</span> (the right hand side in the Bellman equation defining <span class="math">\(V^B\)</span>).</p>
 </div>
 </div>
 </div>
@@ -3640,7 +3578,7 @@ VB_next (generic function with 1 method)
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Write <code>VG_objective(a1, a, y)</code> which, given $a_{t+1}$, $a_t$ and $y_t$, computes $u\left[Q_t + a_t - a_{t+1} q(y_t, a_{t+1}) e^{y_t}\right] + \beta e^{y_t(1-\gamma)} \mathbb{E}_t V(a_{t+1}, y_{t+1})$ (the maximization objective in the right hand side of the Bellman equation defining $V^G$).</p>
+<p>Write <code>VG_objective(a1, a, y)</code> which, given <span class="math">\(a_{t+1}\)</span>, <span class="math">\(a_t\)</span> and <span class="math">\(y_t\)</span>, computes <span class="math">\(u\left[Q_t + a_t - a_{t+1} q(y_t, a_{t+1}) e^{y_t}\right] + \beta e^{y_t(1-\gamma)} \mathbb{E}_t V(a_{t+1}, y_{t+1})\)</span> (the maximization objective in the right hand side of the Bellman equation defining <span class="math">\(V^G\)</span>).</p>
 </div>
 </div>
 </div>
@@ -3769,8 +3707,8 @@ In&nbsp;[73]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Create constant variables to store the maximum number of iterations (set to 1000), and the convergence criterion expressed as a tolerance (set to $10^{-6}$).</p>
-<p>Then create an iteration counter (initialized to 1), and a variable to store the current error (initialized to $+\infty$).</p>
+<p>Create constant variables to store the maximum number of iterations (set to 1000), and the convergence criterion expressed as a tolerance (set to <span class="math">\(10^{-6}\)</span>).</p>
+<p>Then create an iteration counter (initialized to 1), and a variable to store the current error (initialized to <span class="math">\(+\infty\)</span>).</p>
 </div>
 </div>
 </div>
@@ -3871,20 +3809,7 @@ In&nbsp;[75]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now create the main computational loop:</p>
-<ul>
-<li>use a <code>while</code> construct, which will iterate as long as the error is greater than the tolerance, and the iteration counter less than the maximum iterations</li>
-<li>in an embedded loop over the $y_t$ grid:<ul>
-<li>compute the value of $V^B$ at next iteration using <code>VB_next</code>, and store it in <code>VB_points_next</code></li>
-<li>in an embedded loop over the $a_t$ grid, optimize <code>VG_objective</code> over $a_{t+1}$, and store the result in <code>VG_points_next</code></li>
-</ul>
-</li>
-<li>update the error, which is the max of the (infinite norm) distance between <code>VG_points</code> and <code>VG_points_next</code> on one hand, and <code>VB_points</code> and <code>VB_points_next</code> on the other hand</li>
-<li>using <code>copy!</code>, update <code>VG_points</code> and <code>VB_points</code> with the new values</li>
-<li>using <code>copy!</code> and <code>filter_coeffs</code>, update the spline coefficients</li>
-<li>using <code>print</code>, display the iteration counter and the current error</li>
-<li>increment the iteration counter</li>
-</ul>
+<p>Now create the main computational loop: * use a <code>while</code> construct, which will iterate as long as the error is greater than the tolerance, and the iteration counter less than the maximum iterations * in an embedded loop over the <span class="math">\(y_t\)</span> grid: * compute the value of <span class="math">\(V^B\)</span> at next iteration using <code>VB_next</code>, and store it in <code>VB_points_next</code> * in an embedded loop over the <span class="math">\(a_t\)</span> grid, optimize <code>VG_objective</code> over <span class="math">\(a_{t+1}\)</span>, and store the result in <code>VG_points_next</code> * update the error, which is the max of the (infinite norm) distance between <code>VG_points</code> and <code>VG_points_next</code> on one hand, and <code>VB_points</code> and <code>VB_points_next</code> on the other hand * using <code>copy!</code>, update <code>VG_points</code> and <code>VB_points</code> with the new values * using <code>copy!</code> and <code>filter_coeffs</code>, update the spline coefficients * using <code>print</code>, display the iteration counter and the current error * increment the iteration counter</p>
 </div>
 </div>
 </div>
@@ -4075,7 +4000,7 @@ Iteration 117: error=9.423434876865144e-7
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Verify that for $y_t=0$, the default threshold is 21% of debt to (quarterly) GDP:</p>
+<p>Verify that for <span class="math">\(y_t=0\)</span>, the default threshold is 21% of debt to (quarterly) GDP:</p>
 </div>
 </div>
 </div>
