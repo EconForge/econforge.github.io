@@ -10,7 +10,7 @@ import sys
 sys.path.append(os.curdir)
 from pelicanconf import *
 
-SITEURL = 'http://econforge.github.io'
+SITEURL = 'http://www.econforge.org'
 # RELATIVE_URLS = False
 
 FEED_DOMAIN = SITEURL
