@@ -2,7 +2,10 @@
 
 This repository hosts the source for the EconForge blog. 
 
-The site is generated using [http://docs.getpelican.com/en/3.3.0/](http://docs.getpelican.com/en/3.3.0/) and employs the [pure][http://purepelican.com/] theme.
+The site is generated using
+[http://docs.getpelican.com/en/3.5.0/](http://docs.getpelican.com/en/3.5.0/)
+and employs a private fork of the [pure][http://purepelican.com/] theme (the
+fork is needed to add an extra header in the template).
 
 ## Setting up repo
 
@@ -13,7 +16,7 @@ We host this site on GitHub pages. This is a "user" page for the EconForge. GitH
 * `git submodule init`
 * `git submodule update`
 
-At this point you should be all ready to go. To check to see if everything is in order execute `make html`. 
+At this point you should be all ready to go. To check to see if everything is in order execute `make html`.
 
 You can now update the content as you see fit.
 
@@ -23,6 +26,8 @@ NOTE: You should not ever need to change to the master branch of this repo. So, 
 ## Adding Content
 
 All of the content for this site goes into the `content/` folder. Any markdown (extension `.md`) or ReStructuredText (extension `.rst`) file placed in this directory will be included in the website. I encourage the use of markdown to write posts, so I will use markdown for all examples here.
+
+During development, you can test the site by re-creating the output with `make html`, and then launch a local HTTP server with `make serve`). 
 
 ### Post metadata
 
@@ -83,6 +88,6 @@ The `liquid_tags` plugin comes with a few other useful snippets like that, so I 
 
 ## Uploading content
 
-To upload the content when you are done you simply need to make sure that you do `make html` and then execute `make github`. This will move the contents of the output directory to the root of the `master` branch and push to GitHub.
+To upload the content when you are done you simply need to make sure that you do `make publish` and then execute `make github`. This will move the contents of the output directory to the root of the `master` branch and push to GitHub.
 
 The last step is to add the necessary things on the `real_content` branch and push it to origin.
