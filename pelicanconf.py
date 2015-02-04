@@ -44,12 +44,12 @@ TRANSLATION_FEED_ATOM = None
 DEFAULT_PAGINATION = 10
 
 # Uncomment following line if you want document-relative URLs when developing
-#RELATIVE_URLS = True
+RELATIVE_URLS = True
 
 # This requires Pelican 3.3+
 STATIC_PATHS = ['images', 'figures', 'downloads', 'css', 'favicon.ico', 'extra/CNAME']
 EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},}
-EXTRA_HEADER = open('_nb_javascript.html').read().decode('utf-8')
+EXTRA_HEADER = open('_nb_header.html').read().decode('utf-8')
 
 CODE_DIR = 'downloads/code'
 NOTEBOOK_DIR = 'downloads/notebooks'
@@ -58,7 +58,7 @@ NOTEBOOK_DIR = 'downloads/notebooks'
 THEME = 'themes/pure'
 # THEME = 'themes/pelican-octopress-theme'
 PLUGIN_PATHS = ['pelican-plugins']
-PLUGINS = ['summary', 'liquid_tags.img', 'liquid_tags.video',
+PLUGINS = ['summary', 'render_math', 'liquid_tags.img', 'liquid_tags.video',
            'liquid_tags.include_code', 'liquid_tags.notebook',
            'liquid_tags.literal',
            'gravatar']
