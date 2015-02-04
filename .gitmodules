@@ -1,3 +1,6 @@
 [submodule "pelican-plugins"]
 	path = pelican-plugins
 	url = git@github.com:getpelican/pelican-plugins.git
+[submodule "themes/pure"]
+	path = themes/pure
+	url = git@github.com:EconForge/pure.git
