@@ -1,7 +1,6 @@
-
 # coding: utf-8
 
-from IPython.html import widgets # Widget definitions
+from ipywidgets import widgets # Widget definitions
 from IPython.display import display # Used to display widgets in the notebook
 
 
@@ -13,22 +12,22 @@ import numpy
 
 
 class Problem:
-    
+
     def __init__(self,n=4):
-        
+
         self.n = n
         self.gamma = 0.5
-        
+
         import numpy
         import numpy.random
-        
+
         means = numpy.linspace(0,1,n)
         self.means = means[ numpy.random.permutation(n) ]
         self.deviations = numpy.ones(n, dtype=float)
-        
-        
+
+
     def play(self,i):
-        
+
         from numpy import exp
         gamma = self.gamma
         rnd = numpy.random.randn()
@@ -39,27 +38,27 @@ class Problem:
 
 
 class HumanPlayer():
-    
+
     def __init__(self, n):
         self.n = n
         self.restart()
         self.beta = 0.9
         self.gamma = 0.5
-        
+
     def restart(self):
-        
+
         self.problem = Problem(self.n)
         self.n = self.problem.n
-        
+
         self.results = [[] for i in range(self.n)]
         self.create_gui()
         self.total = 0
         self.step = 0
         self.average = [0 for i in range(self.n)]
         self.evaluations = [0 for i in range(self.n)]
-    
+
     def play(self,x):
-        
+
         i = self.buttons_numbers[x]
         rew = self.problem.play(i)
         self.total += self.beta**self.step*rew
@@ -72,41 +71,37 @@ class HumanPlayer():
         buton = self.lines[i].children[1]
         buton.value = "&nbsp;&nbsp;&nbsp;&nbsp;{}".format(b)
         self.step += 1
-    
+
     def create_gui(self):
-        
+
         from IPython.html import widgets
         self.buttons = []
         self.lines = []
         self.last_results = []
         self.buttons_numbers = {}
 
-        
+
         for i in range(self.n):
-            b = widgets.ButtonWidget(description='Bandit {}'.format(i))
+            b = widgets.Button(description='Bandit {}'.format(i))
             self.buttons_numbers[b] = i
             b.on_click(lambda x: self.play(x))
             self.last_results.append(numpy.nan)
             self.buttons.append(b)
-        
-            t1 =  widgets.HTMLWidget(value="&nbsp;&nbsp;&nbsp;&nbsp;{}".format(numpy.nan))
-            line = widgets.ContainerWidget(children=[b,t1])
-            self.lines.append(line)
-            
 
-        total_widget = widgets.HTMLWidget(value="Total Discounted value {}".format(numpy.nan))
-        container = widgets.ContainerWidget()
+            t1 =  widgets.HTML(value="&nbsp;&nbsp;&nbsp;&nbsp;{}".format(numpy.nan))
+            line = widgets.VBox(children=[b,t1])
+            self.lines.append(line)
+
+
+        total_widget = widgets.HTML(value="Total Discounted value {}".format(numpy.nan))
+        container = widgets.VBox()
         container.children = self.lines  + [total_widget]
-        
-        container.children += ((widgets.ButtonWidget(description='Share on Facebook')),)
-        
+
+        container.children += ((widgets.Button(description='Share on Facebook')),)
+
         self.gui = container
 
-        
-        
+
+
     def display(self):
         display(self.gui)
-        for l in self.lines:
-             l.remove_class("vbox")
-             l.add_class("hbox")
-                
